@@ -1,0 +1,27 @@
+$machines{'zed'} = 
+{
+    'nbcores'    => 8,
+    'mempernode' => 0,
+    'execcmd'    => '',
+    'template'   => 'zed.tpl',
+    'script'     => 'job.sh',
+    'submit'     => 'oarsub -S',
+    'time'       => "01:00:00",
+    'args'       => " -p'cluster=\"chinqchint\"' --notify \"mail:$USERMAIL\" -t allow_classic_ssh",
+    'argsbe'     => " -p'cluster=\"chinqchint\"' --notify \"mail:$USERMAIL\" -t allow_classic_ssh --type=besteffort",
+    #'bits'       => "",
+    #'hostarch'   => "",
+    #'ccprog'     => "",
+    #'f77prog'    => "",
+    #'mpccprog'   => "",
+    #'mcfprog'    => "",
+    #'ccfopt'     => "",
+    #'ccfdeb'     => "",
+    #'f90flags'   => "",
+    #'ldflags'    => "",
+    #'ccflags'    => "",
+    #'lkfopt'     => "",
+    #'arprog'     => "",
+    #'arflags'    => "",
+    #'makecmd'    => "make"
+}

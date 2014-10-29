@@ -1,0 +1,28 @@
+$machines{'hagrid'} = 
+{ #soumission en interactif sur hagrid -> pas de 'submit'
+    'nbcores'    => 16,
+    'mempernode' => 64,
+    #'execcmd'    => '',
+    #'template'   => '',
+    #'script'     => '',
+    #'submit'     => '',
+    #'time'       => "",
+    #'args'       => "",
+    #'argsbe'     => "",
+    'bits'       => "_32bits",
+    'hostarch'   => "i686_pc_linux",
+    'ccprog'     => "gcc -Wall",
+    'f77prog'    => "gfortran",
+    'mpccprog'   => "mpicc",
+    'mcfprog'    => "mpicc",
+    'ccfopt'     => "-O3 -m64 -Wall",
+    'ccfdeb'     => "-O0 -g3",
+    'f90flags'   => "-ffree-form -x f95-cpp-input",
+    #'ldflags'    => "-L/net/cremi/mfaverge/acml3.6.0/gnu64/lib -lacml -lg2c -lm -lrt",
+    'ldflags'    => "-L/net/cremi/mfaverge/opt/gotoblas/ -lgoto -lgfortran -lm -lrt",
+    'ccflags'    => "",
+    'lkfopt'     => "-s",
+    'arprog'     => "ar",
+    'arflags'    => "-ruv",
+    'makecmd'    => "make"
+};

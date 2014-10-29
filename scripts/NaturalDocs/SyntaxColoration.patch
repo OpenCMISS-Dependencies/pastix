@@ -1,0 +1,166 @@
+diff --git a/Modules/NaturalDocs/Builder/FramedHTML.pm b/Modules/NaturalDocs/Builder/FramedHTML.pm
+index ab020aa..85ce3ab 100644
+--- Modules/NaturalDocs/Builder/FramedHTML.pm
++++ Modules/NaturalDocs/Builder/FramedHTML.pm
+@@ -97,8 +97,9 @@ sub BuildFile #(sourceFile, parsedFile)
+             . '<link rel="stylesheet" type="text/css" href="' . $self->MakeRelativeURL($outputFile, $self->MainCSSFile(), 1) . '">'
+ 
+             . '<script language=JavaScript src="' . $self->MakeRelativeURL($outputFile, $self->MainJavaScriptFile(), 1) . '"></script>'
+-
+-        . '</head><body class="FramedContentPage" onLoad="NDOnLoad()">'
++	    
++            . '<script language=JavaScript src="' . $self->MakeRelativeURL($outputFile, $self->ShCJavaScriptFile()) . '"></script>'
++        . '</head><body class="FramedContentPage" onLoad="sh_highlightDocument(); NDOnLoad()">'
+             . $self->OpeningBrowserStyles()
+ 
+             . $self->StandardComments()
+@@ -155,8 +156,10 @@ sub BuildIndex #(type)
+             . '<link rel="stylesheet" type="text/css" href="' . $self->MakeRelativeURL($indexFile, $self->MainCSSFile(), 1) . '">'
+ 
+             . '<script language=JavaScript src="' . $self->MakeRelativeURL($indexFile, $self->MainJavaScriptFile(), 1) . '"></script>'
+-
+-        . '</head><body class="FramedIndexPage" onLoad="NDOnLoad()">'
++	    
++            . '<script language=JavaScript src="' . $self->MakeRelativeURL($indexFile, $self->ShJavaScriptFile()) . '"></script>'
++            . '<script language=JavaScript src="' . $self->MakeRelativeURL($indexFile, $self->ShCJavaScriptFile()) . '"></script>'
++        . '</head><body class="FramedIndexPage" onLoad="sh_highlightDocument(); NDOnLoad()">'
+             . $self->OpeningBrowserStyles()
+ 
+             . "\n\n\n"
+@@ -192,8 +195,11 @@ sub BuildIndex #(type)
+             . '<script language=JavaScript src="' . $self->MakeRelativeURL($indexFile, $self->MainJavaScriptFile(), 1) . '"></script>'
+             . '<script language=JavaScript src="' . $self->MakeRelativeURL($indexFile, $self->SearchDataJavaScriptFile(), 1) . '">'
+                 . '</script>'
++		
++            . '<script language=JavaScript src="' . $self->MakeRelativeURL($indexFile, $self->ShJavaScriptFile()) . '"></script>'
++            . '<script language=JavaScript src="' . $self->MakeRelativeURL($indexFile, $self->ShCJavaScriptFile()) . '"></script>'
+ 
+-        . '</head><body class="FramedSearchResultsPage" onLoad="NDOnLoad()">'
++        . '</head><body class="FramedSearchResultsPage" onLoad="sh_highlightDocument(); NDOnLoad()">'
+             . $self->OpeningBrowserStyles()
+ 
+             . "\n\n\n"
+@@ -267,6 +273,8 @@ sub UpdateMenu
+             . '<script language=JavaScript src="' . $self->MakeRelativeURL($outputFile, $self->SearchDataJavaScriptFile(), 1) . '">'
+                 . '</script>'
+ 
++            . '<script language=JavaScript src="' . $self->MakeRelativeURL($outputFile, $self->ShJavaScriptFile()) . '"></script>'
++            . '<script language=JavaScript src="' . $self->MakeRelativeURL($outputFile, $self->ShCJavaScriptFile()) . '"></script>'
+         . '</head><body class="FramedMenuPage" onLoad="NDOnLoad()">'
+             . $self->OpeningBrowserStyles()
+ 
+diff --git a/Modules/NaturalDocs/Builder/HTML.pm b/Modules/NaturalDocs/Builder/HTML.pm
+index 95f31b5..d952c5f 100644
+--- Modules/NaturalDocs/Builder/HTML.pm
++++ Modules/NaturalDocs/Builder/HTML.pm
+@@ -91,13 +91,15 @@ sub BuildFile #(sourceFile, parsedFile)
+             . '</title>'
+ 
+             . '<link rel="stylesheet" type="text/css" href="' . $self->MakeRelativeURL($outputFile, $self->MainCSSFile(), 1) . '">'
+-
+             . '<script language=JavaScript src="' . $self->MakeRelativeURL($outputFile, $self->MainJavaScriptFile(), 1) . '">'
+                 . '</script>'
+             . '<script language=JavaScript src="' . $self->MakeRelativeURL($outputFile, $self->SearchDataJavaScriptFile(), 1) . '">'
+                 . '</script>'
++            . '<script language=JavaScript src="' . $self->MakeRelativeURL($outputFile, $self->ShJavaScriptFile(), 1) . '"></script>'
++            . '<script language=JavaScript src="' . $self->MakeRelativeURL($outputFile, $self->ShCJavaScriptFile(), 1) . '"></script>'
++
+ 
+-        . '</head><body class="ContentPage" onLoad="NDOnLoad()">'
++        . '</head><body class="ContentPage" onLoad="sh_highlightDocument(); NDOnLoad()">'
+             . $self->OpeningBrowserStyles()
+ 
+             . $self->StandardComments()
+@@ -167,8 +169,12 @@ sub BuildIndex #(type)
+             . '<script language=JavaScript src="' . $self->MakeRelativeURL($self->IndexDirectory(),
+                                                                                                         $self->SearchDataJavaScriptFile()) . '">'
+                 . '</script>'
++            . '<script language=JavaScript src="' . $self->MakeRelativeURL($self->IndexDirectory(),
++                                                                                                        $self->ShJavaScriptFile()) . '"></script>'
++            . '<script language=JavaScript src="' . $self->MakeRelativeURL($self->IndexDirectory(),
++                                                                                                        $self->ShCJavaScriptFile()) . '"></script>'
+ 
+-        . '</head><body class="IndexPage" onLoad="NDOnLoad()">'
++        . '</head><body class="IndexPage" onLoad="sh_highlightDocument(); NDOnLoad()">'
+             . $self->OpeningBrowserStyles()
+ 
+         . $self->StandardComments()
+@@ -214,7 +220,12 @@ sub BuildIndex #(type)
+             . '<script language=JavaScript src="' . $self->MakeRelativeURL($self->SearchResultsDirectory(),
+                                                                                                         $self->MainJavaScriptFile()) . '"></script>'
+ 
+-        . '</head><body class="PopupSearchResultsPage" onLoad="NDOnLoad()">'
++            . '<script language=JavaScript src="' . $self->MakeRelativeURL($self->SearchResultsDirectory(),
++                                                                                                        $self->ShJavaScriptFile()) . '"></script>'
++            . '<script language=JavaScript src="' . $self->MakeRelativeURL($self->SearchResultsDirectory(),
++                                                                                                        $self->ShCJavaScriptFile()) . '"></script>'
++
++        . '</head><body class="PopupSearchResultsPage" onLoad="sh_highlightDocument(); NDOnLoad()">'
+             . $self->OpeningBrowserStyles()
+ 
+         . $self->StandardComments()
+diff --git a/Modules/NaturalDocs/Builder/HTMLBase.pm b/Modules/NaturalDocs/Builder/HTMLBase.pm
+index d943622..a12131d 100644
+--- Modules/NaturalDocs/Builder/HTMLBase.pm
++++ Modules/NaturalDocs/Builder/HTMLBase.pm
+@@ -2633,6 +2633,28 @@ sub SearchDataJavaScriptFile
+     return NaturalDocs::File->JoinPaths( $self->JavaScriptDirectory(), 'searchdata.js' );
+     };
+ 
++#
++#   Function: ShJavaScriptFile
++#
++#   Returns the location of the search data JavaScript file.
++#
++sub ShJavaScriptFile
++    {
++    my $self = shift;
++    return NaturalDocs::File->JoinPaths( $self->JavaScriptDirectory(), 'sh_main.js' );
++    };
++
++
++#
++#   Function: ShCJavaScriptFile
++#
++#   Returns the location of the search data JavaScript file.
++#
++sub ShCJavaScriptFile
++    {
++    my $self = shift;
++    return NaturalDocs::File->JoinPaths( $self->JavaScriptDirectory(), 'sh_c.js' );
++    };
+ 
+ 
+ ###############################################################################
+@@ -2829,8 +2851,17 @@ sub NDMarkupToHTML #(sourceFile, text, symbol, package, type, using, style)
+ 
+         if ($text eq '<code>')
+             {
+-            $output .= '<blockquote><pre>';
+-            $inCode = 1;
++		if ($sourceFile =~ /.*\.[ch]$/)
++		{
++
++		    $output .= '<blockquote><pre class="sh_c" >';
++		    $inCode = 1;
++		}
++		else
++		{
++		    $output .= '<blockquote><pre class="sh_c" >';
++		    $inCode = 1;
++		}
+             }
+         elsif ($text eq '</code>')
+             {
+@@ -2840,6 +2871,11 @@ sub NDMarkupToHTML #(sourceFile, text, symbol, package, type, using, style)
+         elsif ($inCode)
+             {
+             # Leave line breaks in.
++		if ($sourceFile =~ /.*\.[ch]$/)
++		{
++		    $text =~ s/\/\\\*/\/*/g;
++		    $text =~ s/\*\\\//*\//g;
++		}
+             $output .= $text;
+             }
+         else

@@ -1,0 +1,5 @@
+- Possibility to launch run as soon as binaries are compiles (faster
+  submission)
+- Give possibility to run Metis with PaStiX, only build possible for the moment.
+- Improve website
+- Cleenup Database when /var/lib is full.

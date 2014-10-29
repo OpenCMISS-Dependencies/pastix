@@ -1,0 +1,466 @@
+Format: 1.52
+
+
+Title: PaStiX
+Logo: http://pastix.gforge.inria.fr/pastix_logo_small2.jpg
+SubTitle: Parallel Sparse Matrix Package
+
+# You can add a footer to your documentation like this:
+# Footer: [text]
+# If you want to add a copyright notice, this would be the place to do it.
+
+# You can add a timestamp to your documentation like one of these:
+# Timestamp: Generated on month day, year
+# Timestamp: Updated mm/dd/yyyy
+# Timestamp: Last updated mon day
+#
+#   m     - One or two digit month.  January is "1"
+#   mm    - Always two digit month.  January is "01"
+#   mon   - Short month word.  January is "Jan"
+#   month - Long month word.  January is "January"
+#   d     - One or two digit day.  1 is "1"
+#   dd    - Always two digit day.  1 is "01"
+#   day   - Day with letter extension.  1 is "1st"
+#   yy    - Two digit year.  2006 is "06"
+#   yyyy  - Four digit year.  2006 is "2006"
+#   year  - Four digit year.  2006 is "2006"
+
+# These are indexes you deleted, so Natural Docs will not add them again
+# unless you remove them from this line.
+
+Don't Index: Structures
+
+
+# --------------------------------------------------------------------------
+# 
+# Cut and paste the lines below to change the order in which your files
+# appear on the menu.  Don't worry about adding or removing files, Natural
+# Docs will take care of that.
+# 
+# You can further organize the menu by grouping the entries.  Add a
+# "Group: [name] {" line to start a group, and add a "}" to end it.
+# 
+# You can add text and web links to the menu by adding "Text: [text]" and
+# "Link: [name] ([URL])" lines, respectively.
+# 
+# The formatting and comments are auto-generated, so don't worry about
+# neatness when editing the file.  Natural Docs will clean it up the next
+# time it is run.  When working with groups, just deal with the braces and
+# forget about the indentation and comments.
+# 
+# --------------------------------------------------------------------------
+
+
+File: PaStiX  (README.txt)
+Link: Homepage on Gforge  (https://gforge.inria.fr/projects/pastix/)
+Link: Downloads  (https://gforge.inria.fr/frs/?group_id=186)
+Link: Publications  (http://www.labri.fr/perso/ramet/bib/Keyword/SPARSE.html)
+Link: User Documentation  (https://gforge.inria.fr/docman/index.php?group_id=186&amp;selected_doc_group_id=246&amp;language_id=1)
+File: PaStiX interface  (no auto-title, sopalin/src/pastix.h)
+File: Murge interface  (no auto-title, murge/include/murge.h)
+File: PaStiX specific addons to Murge  (sopalin/src/murge_pastix.h)
+
+Group: Developper Documentation  {
+
+   Group: Common  {
+
+      File: api.h  (common/src/api.h)
+      File: nompi.h  (common/src/nompi.h)
+      File: common_pastix.h  (common/src/common_pastix.h)
+      File: common.c  (common/src/common.c)
+      File: common_error  (common/src/common_error.c)
+      File: common_integer.c  (common/src/common_integer.c)
+      File: common_memory.c  (common/src/common_memory.c)
+      File: trace.h  (common/src/trace.h)
+      File: idg  (common/src/trace.c)
+      File: main  (common/src/testqsort.c)
+      File: common_sort.c  (common/src/common_sort.c)
+      File: common_sort.c  (common/src/common_sort2.c)
+      File: common_sort.c  (common/src/common_sort3.c)
+      File: debug.h  (common/src/debug.h)
+      File: errors.h  (common/src/errors.h)
+      File: not_empty.h  (common/src/not_empty.h)
+      File: out.h  (common/src/out.h)
+      File: redefine_functions.h  (common/src/redefine_functions.h)
+      }  # Group: Common
+
+   Group: Examples  {
+
+      File: dsimple.c  (example/src/do_not_redispatch_rhs.c)
+      File: fmurge.F90  (example/src/fmurge.F90)
+      File: fsimple.F90  (example/src/fsimple.F90)
+      File: fstep-by-step.F90  (example/src/fstep-by-step.F90)
+      File: isolate_zeros.c  (example/src/isolate_zeros.c)
+      File: mult-rhs.c  (example/src/mult-rhs.c)
+      File: multi-comm.c  (example/src/multi-comm.c)
+      File: multi-comm.c  (example/src/multi-comm-step.c)
+      File: murge-product  (example/src/murge-product.c)
+      File: Murge.c  (example/src/Murge.c)
+      File: plot_memory_usage.c  (example/src/plot_memory_usage.c)
+      File: reentrant.c  (example/src/reentrant.c)
+      File: refinement  (example/src/reffinement.c)
+      File: schur.c  (example/src/schur.c)
+      File: schur.c  (example/src/schur2.c)
+      File: simple.c  (example/src/simple.c)
+      File: simple_dist.c  (example/src/simple_dist.c)
+      File: simple_param.c  (example/src/simple_param.c)
+      File: step-by-step.c  (example/src/step-by-step.c)
+      File: step-by-step_dist.c  (example/src/step-by-step_dist.c)
+      File: utils.f90  (example/src/utils.F90)
+      }  # Group: Examples
+
+   Group: Matrix_drivers  {
+
+      File: api_str_to_int  (matrix_drivers/src/api_str_to_int.h)
+      File: cccread.c  (matrix_drivers/src/cccread.c)
+      File: cccread.h  (matrix_drivers/src/cccread.h)
+      File: chbread.c  (matrix_drivers/src/chbread.c)
+      File: chbread.h  (matrix_drivers/src/chbread.h)
+      File: common_drivers.c  (matrix_drivers/src/common_drivers.c)
+      File: common_drivers.h  (matrix_drivers/src/common_drivers.h)
+      File: cs_sparse  (matrix_drivers/src/csparse.h)
+      File: cscdread.c  (matrix_drivers/src/cscdread.c)
+      File: cscdread.h  (matrix_drivers/src/cscdread.h)
+      File: csparse.c  (matrix_drivers/src/csparse.c)
+      File: fdupread.c  (matrix_drivers/src/fdupread.c)
+      File: fdupread.h  (matrix_drivers/src/fdupread.h)
+      File: get_options.c  (matrix_drivers/src/get_options.c)
+      File: get_options.h  (matrix_drivers/src/get_options.h)
+      File: hbread.c  (matrix_drivers/src/hbread.c)
+      File: hbread.h  (matrix_drivers/src/hbread.h)
+      File: iohb.c  (matrix_drivers/src/iohb.c)
+      File: laplacian.c  (matrix_drivers/src/laplacian.c)
+      File: laplacian.h  (matrix_drivers/src/laplacian.h)
+      File: mmio.c  (matrix_drivers/src/mmio.c)
+      File: mmio.h  (matrix_drivers/src/mmio.h)
+      File: mmread.c  (matrix_drivers/src/mmread.c)
+      File: mmread.h  (matrix_drivers/src/mmread.h)
+      File: mtx.c  (matrix_drivers/src/mtx.c)
+      File: mtx.h  (matrix_drivers/src/mtx.h)
+      File: olafread.c  (matrix_drivers/src/olafread.c)
+      File: olafread.h  (matrix_drivers/src/olafread.h)
+      File: peerread.c  (matrix_drivers/src/peerread.c)
+      File: peerread.h  (matrix_drivers/src/peerread.h)
+      File: read_matrix.c  (matrix_drivers/src/read_matrix.c)
+      File: read_matrix.h  (matrix_drivers/src/read_matrix.h)
+      File: rsaread.c  (matrix_drivers/src/rsaread.c)
+      File: rsaread.h  (matrix_drivers/src/rsaread.h)
+      File: threetilesread.c  (matrix_drivers/src/threefilesread.c)
+      File: threetilesread.h  (matrix_drivers/src/threefilesread.h)
+      }  # Group: Matrix_drivers
+
+   Group: Graph  {
+
+      File: graph.h  (graph/src/graph.h)
+      File: graph_grid.h  (no auto-title, graph/src/graph_grid.h)
+      File: graph_grid.c  (graph/src/graph_grid.c)
+      File: graph_grid_tetra2.h  (no auto-title, graph/src/graph_grid_tetra2.h)
+      File: graph_grid_tetra2.c  (graph/src/graph_grid_tetra2.c)
+      File: graph_grid_tetra3.h  (no auto-title, graph/src/graph_grid_tetra3.h)
+      File: graph_grid_tetra3.c  (graph/src/graph_grid_tetra3.c)
+      File: graph_build.c  (no auto-title, graph/src/graph_build.c)
+      File: graph_graph.c  (no auto-title, graph/src/graph_graph.c)
+      File: mesh_dummy.c  (no auto-title, graph/src/mesh_dummy.c)
+      }  # Group: Graph
+
+   Group: Order  {
+
+      File: ocv.h  (no auto-title, order/src/ocv.h)
+      File: ocv.c  (order/src/ocv.c)
+      File: order.h  (no auto-title, order/src/order.h)
+      File: order.c  (order/src/order.c)
+      File: order_base.c  (no auto-title, order/src/order_base.c)
+      File: order_check.c  (no auto-title, order/src/order_check.c)
+      File: order_grid.h  (order/src/order_grid.h)
+      File: order_grid.c  (order/src/order_grid.c)
+      File: order_io.c  (order/src/order_io.c)
+      File: order_scotch.c  (order/src/order_scotch.c)
+      File: order_scotch_graph.c  (order/src/order_scotch_graph.c)
+      File: order_scotch_mesh.c  (order/src/order_scotch_mesh.c)
+      }  # Group: Order
+
+   Group: Fax  {
+
+      File: fax.h  (fax/src/fax.h)
+      File: symbol_costi.c  (fax/src/symbol_costi.c)
+      File: symbol_fax.h  (no auto-title, fax/src/symbol_fax.h)
+      File: symbol_fax_grid.c  (fax/src/symbol_fax_grid.c)
+      File: symbol_fax_grid_tetra.c  (fax/src/symbol_fax_grid_tetra.c)
+      File: symbol_fax_mesh.h  (no auto-title, fax/src/symbol_fax_mesh.h)
+      File: symbol_fax_mesh.c  (fax/src/symbol_fax_mesh.c)
+      File: symbol_faxi.h  (no auto-title, fax/src/symbol_faxi.h)
+      File: symbol_faxi_grid.c  (fax/src/symbol_faxi_grid.c)
+      File: symbol_compact.c  (no auto-title, fax/src/symbol_compact.c)
+      File: symbol_costi.h  (no auto-title, fax/src/symbol_costi.h)
+      File: symbol_fax_graph.c  (no auto-title, fax/src/symbol_fax_graph.c)
+      File: symbol_faxi_graph.c  (no auto-title, fax/src/symbol_faxi_graph.c)
+      File: main_fax.c  (no auto-title, fax/src/main_fax.c)
+      File: main_fax_1.c  (fax/src/main_fax_1.c)
+      File: main_fax_2.c  (fax/src/main_fax_2.c)
+      File: main_fax_3.c  (fax/src/main_fax_3.c)
+      File: main_fax_graph.c  (no auto-title, fax/src/main_fax_graph.c)
+      File: main_fax_mesh.c  (no auto-title, fax/src/main_fax_mesh.c)
+      File: main_faxi.c  (no auto-title, fax/src/main_faxi.c)
+      File: main_faxi_graph.c  (no auto-title, fax/src/main_faxi_graph.c)
+      File: symbol_fax.c  (fax/src/symbol_fax.c)
+      File: symbol_faxi_nomerge.c  (fax/src/symbol_faxi.c)
+      }  # Group: Fax
+
+   Group: Symbol  {
+
+      File: dof.h  (no auto-title, symbol/src/dof.h)
+      File: dof.c  (symbol/src/dof.c)
+      File: dof_io.c  (no auto-title, symbol/src/dof_io.c)
+      File: Symbol.h  (no auto-title, symbol/src/symbol.h)
+      File: symbol.c  (symbol/src/symbol.c)
+      File: symbol_base.c  (no auto-title, symbol/src/symbol_base.c)
+      File: symbol_check.c  (no auto-title, symbol/src/symbol_check.c)
+      File: symbol_cost.h  (no auto-title, symbol/src/symbol_cost.h)
+      File: symbol_cost.c  (symbol/src/symbol_cost.c)
+      File: symbol_draw.c  (symbol/src/symbol_draw.c)
+      File: symbol_io.c  (symbol/src/symbol_io.c)
+      File: symbol_keep.c  (symbol/src/symbol_keep.c)
+      File: symbol_level.c  (no auto-title, symbol/src/symbol_level.c)
+      File: symbol_levf.c  (no auto-title, symbol/src/symbol_levf.c)
+      File: symbol_nonzeros.c  (no auto-title, symbol/src/symbol_nonzeros.c)
+      File: symbol_tree.c  (no auto-title, symbol/src/symbol_tree.c)
+      File: symboltops.c  (no auto-title, symbol/src/symboltops.c)
+      File: main  (symbol/src/symbol2eps.c)
+      }  # Group: Symbol
+
+   Group: Blend  {
+
+      File: assembly.h  (no auto-title, blend/src/assembly.h)
+      File: assemblyGener.h  (blend/src/assemblyGener.h)
+      File: assemblyGener.c  (blend/src/assemblyGener.c)
+      File: blendctrl.h  (no auto-title, blend/src/blendctrl.h)
+      File: blendctrl.c  (blend/src/blendctrl.c)
+      File: bulles.h  (no auto-title, blend/src/bulles.h)
+      File: bulles.c  (blend/src/bulles.c)
+      File: cand.h  (no auto-title, blend/src/cand.h)
+      File: cost.h  (no auto-title, blend/src/cost.h)
+      File: cost.c  (blend/src/cost.c)
+      File: costfunc.h  (blend/src/costfunc.h)
+      File: costfunc.c  (blend/src/costfunc.c)
+      File: distribPart.h  (blend/src/distribPart.h)
+      File: distribPart.c  (blend/src/distribPart.c)
+      File: elimin.h  (no auto-title, blend/src/elimin.h)
+      File: elimin.c  (blend/src/elimin.c)
+      File: eliminfunc.h  (blend/src/eliminfunc.h)
+      File: eliminfunc.c  (blend/src/eliminfunc.c)
+      File: extendVector.h  (no auto-title, blend/src/extendVector.h)
+      File: extendVector.c  (blend/src/extendVector.c)
+      File: extrastruct.h  (no auto-title, blend/src/extrastruct.h)
+      File: extrastruct.c  (blend/src/extrastruct.c)
+      File: fanboth2.h  (blend/src/fanboth2.h)
+      File: fanboth2.c  (blend/src/fanboth2.c)
+      File: ftgt.h  (blend/src/ftgt.h)
+      File: param_blend.h  (no auto-title, blend/src/param_blend.h)
+      File: param_blend.c  (blend/src/param_blend.c)
+      File: partbuild.h  (no auto-title, blend/src/partbuild.h)
+      File: partbuild.c  (no auto-title, blend/src/partbuild.c)
+      File: queue.h  (no auto-title, blend/src/queue.h)
+      File: Queue.c  (blend/src/queue.c)
+      File: simu.h  (no auto-title, blend/src/simu.h)
+      File: simu.c  (blend/src/simu.c)
+      File: solver_io.h  (blend/src/solver_io.h)
+      File: solver_io.c  (blend/src/solver_io.c)
+      File: blend.h  (no auto-title, blend/src/blend.h)
+      File: blend.c  (no auto-title, blend/src/blend.c)
+      File: solver.h  (no auto-title, blend/src/solver.h)
+      File: solver_check.h  (no auto-title, blend/src/solver_check.h)
+      File: solver_check.c  (no auto-title, blend/src/solver_check.c)
+      File: solverMatrixGen.h  (no auto-title, blend/src/solverMatrixGen.h)
+      File: solverMatrixGen.c  (no auto-title, blend/src/solverMatrixGen.c)
+      File: solverRealloc.h  (blend/src/solverRealloc.h)
+      File: solverRealloc.c  (blend/src/solverRealloc.c)
+      File: splitfunc.h  (blend/src/splitfunc.h)
+      File: splitfunc.c  (blend/src/splitfunc.c)
+      File: splitpart.h  (blend/src/splitpart.h)
+      File: splitpart.c  (blend/src/splitpart.c)
+      File: splitpartlocal.h  (blend/src/splitpartlocal.h)
+      File: splitpartlocal.c  (blend/src/splitpartlocal.c)
+      File: symbol_cost.h  (blend/src/symbol_cost.h)
+      File: symbolrand.h  (blend/src/symbolrand.h)
+      File: symbolrand.c  (blend/src/symbolrand.c)
+      File: task.h  (blend/src/task.h)
+      File: task.c  (blend/src/task.c)
+      File: updown.h  (no auto-title, blend/src/updown.h)
+      File: write_ps.h  (blend/src/write_ps.h)
+      File: write_ps.c  (blend/src/write_ps.c)
+      File: seb.c  (blend/src/seb.c)
+      File: seb.h  (blend/src/seb.h)
+      File: blend_symbol_cost.c  (blend/src/blend_symbol_cost.c)
+      File: Macros  (blend/src/csc.h)
+      }  # Group: Blend
+
+   Group: Kass  {
+
+      File: amalgamate.h  (no auto-title, kass/src/amalgamate.h)
+      File: amalgamate.c  (kass/src/amalgamate.c)
+      File: compact_graph.h  (no auto-title, kass/src/compact_graph.h)
+      File: compact_graph.c  (kass/src/compact_graph.c)
+      File: find_supernodes.h  (no auto-title, kass/src/find_supernodes.h)
+      File: find_supernodes.c  (kass/src/find_supernodes.c)
+      File: ifax.h  (no auto-title, kass/src/ifax.h)
+      File: ifax.c  (no auto-title, kass/src/ifax.c)
+      File: isymb_compact.h  (no auto-title, kass/src/isymb_compact.h)
+      File: isymb_compact.c  (kass/src/isymb_compact.c)
+      File: kass.h  (kass/src/kass.h)
+      File: kass.c  (kass/src/kass.c)
+      File: KSupernodes.h  (no auto-title, kass/src/KSupernodes.h)
+      File: KSupernodes.c  (kass/src/KSupernodes.c)
+      File: KSupernodes2.c  (kass/src/KSupernodes2.c)
+      File: paskix.h  (kass/src/paskix.h)
+      File: SF_Direct.h  (no auto-title, kass/src/SF_Direct.h)
+      File: SF_Direct.c  (kass/src/SF_Direct.c)
+      File: SF_level.h  (no auto-title, kass/src/SF_level.h)
+      File: SF_level.c  (no auto-title, kass/src/SF_level.c)
+      File: sort_row  (kass/src/sort_row.h)
+      File: sort_row  (kass/src/sort_row.c)
+      File: sparRow.h  (no auto-title, kass/src/sparRow.h)
+      File: sparRow.c  (kass/src/sparRow.c)
+      }  # Group: Kass
+
+   Group: Sopalin  {
+
+      File: bordi.c  (sopalin/src/bordi.c)
+      File: coefinit.h  (sopalin/src/coefinit.h)
+      File: coefinit.c  (no auto-title, sopalin/src/coefinit.c)
+      File: sopalin_compute_linux.h  (no auto-title, sopalin/src/sopalin_compute_linux.h)
+      File: ooc.h  (sopalin/src/ooc.h)
+      File: ooc.c  (sopalin/src/ooc.c)
+      File: pastix.h  (no auto-title, sopalin/src/pastix.h)
+      File: pastix.c  (no auto-title, sopalin/src/pastix.c)
+      File: pastix_fortran.c  (sopalin/src/pastix_fortran.c)
+      File: Functions declarations  (sopalin/src/raff.c)
+      File: sopalin_compute.c  (sopalin/src/sopalin_compute.c)
+      File: sopalin_define.h  (sopalin/src/sopalin_define.h)
+      File: sopalin_sendrecv.c  (sopalin/src/sopalin_sendrecv.c)
+      File: sopalin_thread.h  (no auto-title, sopalin/src/sopalin_thread.h)
+      File: sopalin_thread.c  (sopalin/src/sopalin_thread.c)
+      File: sopalin_time.h  (no auto-title, sopalin/src/sopalin_time.h)
+      File: sopalin_init.h  (no auto-title, sopalin/src/sopalin_init.h)
+      File: sopalin_init.c  (sopalin/src/sopalin_init.c)
+      File: sopalin3d.h  (sopalin/src/sopalin3d.h)
+      File: sopalin3d.c  (sopalin/src/sopalin3d.c)
+      File: tools.h  (sopalin/src/tools.h)
+      File: tools.c  (sopalin/src/tools.c)
+      File: updo.c  (sopalin/src/updo.c)
+      File: debug_dump.c  (sopalin/src/debug_dump.c)
+      File: debug_dump.h  (sopalin/src/debug_dump.h)
+      File: main  (sopalin/src/cscd_test.c)
+      File: murge.c  (sopalin/src/murge.c)
+      File: pastix_data_t  (sopalin/src/pastixstr.h)
+      File: sopalin_option.c  (sopalin/src/sopalin_option.c)
+      File: sopalin_option.h  (sopalin/src/sopalin_option.h)
+
+      Group: CSC(d) management  {
+
+         File: csc_utils.c  (sopalin/src/csc_utils.c)
+         File: csc_utils.h  (sopalin/src/csc_utils.h)
+         File: cscd_utils.c  (sopalin/src/cscd_utils.c)
+         File: cscd_utils.h  (sopalin/src/cscd_utils.h)
+         }  # Group: CSC(d) management
+
+      Group: CSC intern  {
+
+         File: csc_intern_build.h  (sopalin/src/csc_intern_build.h)
+         File: csc_intern_build.c  (sopalin/src/csc_intern_build.c)
+         File: csc_intern_compute.c  (sopalin/src/csc_intern_compute.c)
+         File: csc_intern_compute.h  (sopalin/src/csc_intern_compute.h)
+         File: csc_intern_io.c  (sopalin/src/csc_intern_io.c)
+         File: csc_intern_io.h  (sopalin/src/csc_intern_io.h)
+         File: csc_intern_old.c  (sopalin/src/csc_intern_old.c)
+         File: csc_intern_old.h  (sopalin/src/csc_intern_old.h)
+         File: Csc2solv_cblk  (sopalin/src/csc_intern_solve.c)
+         File: csc_intern_solve.h  (sopalin/src/csc_intern_solve.h)
+         File: csc_intern_updown.c  (sopalin/src/csc_intern_updown.c)
+         File: csc_intern_updown.h  (sopalin/src/csc_intern_updown.h)
+         }  # Group: CSC intern
+
+      File: debug_dump.c  (sopalin/src/debug_dump.c)
+      File: debug_dump.h  (sopalin/src/debug_dump.h)
+      File: pastix_data_t  (sopalin/src/pastixstr.h)
+      File: main  (sopalin/src/cscd_test.c)
+      File: API_CALL&lparen;CORE_gemdm&rparen;  (sopalin/src/compute_gemdm.c)
+      File: bordi.h  (sopalin/src/bordi.h)
+      File: compute_diag.c  (sopalin/src/compute_diag.c)
+      File: compute_trsm.c  (sopalin/src/compute_trsm.c)
+      File: cscd_utils_intern.h  (sopalin/src/cscd_utils_intern.h)
+      File: dynsched.h  (sopalin/src/dynsched.h)
+      File: faststack  (sopalin/src/stack.h)
+      File: murge_defines.h  (sopalin/src/murge_defines.h)
+      File: pastix_fortran.c  (sopalin/src/cscd_utils_fortran.c)
+      File: scaling.c  (sopalin/src/scaling.c)
+      File: scaling.h  (sopalin/src/scaling.h)
+      File: starpu_kernels.c  (sopalin/src/starpu_kernels.c)
+      File: starpu_kernels.h  (sopalin/src/starpu_kernels.h)
+      File: starpu_submit_tasks  (sopalin/src/starpu_submit_tasks.h)
+      File: starpu_submit_tasks.c  (sopalin/src/starpu_submit_tasks.c)
+      File: updo_sendrecv.c  (sopalin/src/updo_sendrecv.c)
+      File: updo_sendrecv.h  (sopalin/src/updo_sendrecv.h)
+      }  # Group: Sopalin
+
+   Group: Utils  {
+
+      File: genheader.c  (no auto-title, utils/src/genheader.c)
+      File: main  (utils/src/print_options.c)
+      }  # Group: Utils
+
+   Group: Parafax  {
+
+      File: CSC_  (parafax/src/cscd.h)
+      File: cscd.c  (parafax/src/cscd.c)
+      File: parafax.c  (parafax/src/parafax.c)
+      File: parafax.h  (parafax/src/parafax.h)
+      }  # Group: Parafax
+
+   Group: sparse_matrix  {
+   
+      File: pastix_sparse_matrix.h  (sparse-matrix/src/pastix_sparse_matrix.h)
+      File: sparse_matrix.c  (no auto-title, sparse-matrix/src/pastix_sparse_matrix.c)
+      }  # Group: sparse_matrix
+   }  # Group: Developper Documentation
+
+
+Group: Murge  {
+
+   Group: Examples  {
+
+      File: mmio.c  (murge/examples/src/mmio.c)
+      File: mmio.h  (murge/examples/src/mmio.h)
+      File: murge-dist  (murge/examples/src/murge-dist.c)
+      File: murge-dist  (murge/examples/src/murge-save-load.c)
+      File: murge-global  (murge/examples/src/murge-global.c)
+      File: murge-matrix-and-rhs  (murge/examples/src/multi-matrix-and-rhs.c)
+      File: murge-mm  (murge/examples/src/murge-mm.c)
+      }  # Group: Examples
+
+   File: Murge  (murge/include/murge.h)
+   File: PaStiX specific addons to Murge  (sopalin/src/murge_pastix.h)
+
+   Group: Scripts  {
+
+      File: gendoc.pl  (murge/scripts/gendoc.pl)
+      File: genfort.pl  (murge/scripts/genfort.pl)
+      File: geninterface.pl  (murge/scripts/geninterface.pl)
+      }  # Group: Scripts
+
+   }  # Group: Murge
+
+File: To use PaStiX through PetsC  (README_PETSC.txt)
+
+Group: Index  {
+
+   Index: Everything
+   Class Index: Classes
+   Constant Index: Constants
+   File Index: Files
+   Function Index: Functions
+   Type Index: Types
+   Variable Index: Variables
+   Property Index: Properties
+   Macro Index: Macros
+   }  # Group: Index
+

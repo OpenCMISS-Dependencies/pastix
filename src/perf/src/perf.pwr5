@@ -1,0 +1,133 @@
+#ifndef PERF_H
+#define PERF_H
+
+#define PERF_MODEL "IBM PWR5 ESSL"
+
+#define OPS_SCAL(i)     (i)
+#define OPS_COPY(i)     (i)
+/*
+#define OPS_AXPY(i)     (i)
+#define OPS_SWAP(i)     (i)
+#define OPS_GEMV(i,j)   ((i)*(j))
+#define OPS_TRSV(i,j)   (((i)*(i-1)*(j))/2.)
+#define OPS_GER(i,j)    ((i)*(j))
+*/
+#define OPS_GEMM(i,j,k) (2.*(i)*(j)*(k))
+#define OPS_TRSM(i,j)   ((i)*(i-1)*(j))
+#define OPS_PPF(i)      ((2.*(i)*(i)*(i)+3.*(i)*(i)-5.*(i))/6.)
+#define OPS_GEAM(i,j)   ((i)*(j))
+
+/*GEMM*/
+#define GEMM_A  6.648996e-10
+#define GEMM_B  5.817424e-10
+#define GEMM_C  1.263699e-09
+#define GEMM_D  2.000862e-07
+#define GEMM_E  6.778426e-08
+#define GEMM_F  3.568915e-06
+#define PERF_GEMM(i,j,k) (GEMM_A*(double)(i)*(double)(j)*(double)(k)+GEMM_B*(double)(i)*(double)(j)+GEMM_C*(double)(j)*(double)(k)+GEMM_D*(double)(i)+GEMM_E*(double)(j)+GEMM_F)
+
+
+/*GEAM*/
+#define GEAM_A  2.282098e-09
+#define GEAM_B -9.425022e-10
+#define GEAM_C 4.380417e-08
+#define GEAM_D  9.922780e-07
+#define PERF_GEAM(i,j)   (GEAM_A*(double)(i)*(double)(j)+GEAM_B*(double)(i)+GEAM_C*(double)(j)+GEAM_D)
+
+/*TRSM*/
+#define TRSM_A 4.391564e-10
+#define TRSM_B 2.136585e-07
+#define TRSM_C 2.963512e-06
+#define PERF_TRSM(i,j)   (TRSM_A*(double)(i)*(double)(i)*(double)(j)+TRSM_B*(double)(i)+TRSM_C)
+
+/*POF*/
+#define POF_A 1.600702e-10
+#define POF_B -1.759585e-09
+#define POF_C 4.154197e-07
+#define POF_D 1.344100e-06
+#define PERF_POF(i) (POF_A*(double)(i)*(double)(i)*(double)(i)+POF_B*(double)(i)*(double)(i)+POF_C*(double)(i)+POF_D)
+
+/*PPF*/
+#define PPF_A 1.807777e-10
+#define PPF_B 1.086626e-08
+#define PPF_C 2.682159e-07
+#define PPF_D 9.921275e-07
+#define PERF_PPF(i) (PPF_A*(double)(i)*(double)(i)*(double)(i)+PPF_B*(double)(i)*(double)(i)+PPF_C*(double)(i)+PPF_D)
+
+/*AXPY*/
+#define AXPY_A 2.333381e-09
+#define AXPY_B 1.480664e-06
+#define PERF_AXPY(i) (AXPY_A*(double)(i)+AXPY_B)
+
+/*COPY*/
+#define COPY_A 1.760641e-09
+#define COPY_B 1.522475e-06
+#define PERF_COPY(i) (COPY_A*(double)(i)+COPY_B)
+
+/*SCAL*/
+#define SCAL_A 1.730507e-09
+#define SCAL_B 1.513579e-06
+#define PERF_SCAL(i) (SCAL_A*(double)(i)+SCAL_B)
+
+/*GEMV*/
+#define GEMV_A  4.178687e-07
+#define GEMV_B -2.012437e-07
+#define GEMV_C -4.108872e-07
+#define GEMV_D  9.706372e-07
+#define PERF_GEMV(i,j)   (GEMV_A*(double)(i)*(double)(j)+GEMV_B*(double)(i)+GEMV_C*(double)(j)+GEMV_D)
+
+/*TRSV*/
+#define TRSV_A 6.451882e-10
+#define TRSV_B 5.054328e-08
+#define TRSV_C 1.138912e-06
+#define PERF_TRSV(i) (TRSV_A*(double)(i)*(double)(i)+TRSV_B*(double)(i)+TRSV_C)
+
+/* en octets ...
+   TIME : entre threads */
+
+/* en octets ...
+   CLUSTER : entre noeuds */
+
+/* en octets ...
+   SHARED : entre MPI shared */
+
+/* old version compatibility
+#define TIME_BANDWIDTH    1.5e-9
+#define TIME_STARTUP      5.2e-6
+#define CLUSTER_BANDWIDTH 5.9e-10
+#define CLUSTER_STARTUP   3.9e-6
+   end old                  */
+
+#define TIME_BANDWIDTH_1    0.0
+#define TIME_STARTUP_1      1e-6
+#define SHARED_BANDWIDTH_1  1.5e-9
+#define SHARED_STARTUP_1    5.2e-6
+#define CLUSTER_BANDWIDTH_1 5.9e-10
+#define CLUSTER_STARTUP_1   3.9e-6
+
+#define TIME_BANDWIDTH_2    0.0
+#define TIME_STARTUP_2      1e-6
+#define SHARED_BANDWIDTH_2  1.5e-9
+#define SHARED_STARTUP_2    7.3e-6
+#define CLUSTER_BANDWIDTH_2 5.6e-10
+#define CLUSTER_STARTUP_2   3.7e-6
+
+#define TIME_BANDWIDTH_4    0.0
+#define TIME_STARTUP_4      1e-6
+#define SHARED_BANDWIDTH_4  1.6e-9
+#define SHARED_STARTUP_4    4.9e-6
+#define CLUSTER_BANDWIDTH_4 7.8e-10
+#define CLUSTER_STARTUP_4   3.8e-6
+
+#define TIME_BANDWIDTH_8    0.0
+#define TIME_STARTUP_8      1e-6
+#define SHARED_BANDWIDTH_8  1.2e-9
+#define SHARED_STARTUP_8    3.8e-6
+#define CLUSTER_BANDWIDTH_8 8.8e-10
+#define CLUSTER_STARTUP_8   3.8e-6
+
+#define PENALTY_STARTUP     0.0
+#define PENALTY_BANDWIDTH   0.0
+
+#endif /* PERF_H */
+

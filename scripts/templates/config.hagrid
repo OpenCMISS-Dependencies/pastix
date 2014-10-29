@@ -1,0 +1,81 @@
+HOSTARCH=i686_pc_linux
+VERSIONBIT=_32bit
+EXEEXT=
+OBJEXT=.o
+LIBEXT=.a
+CCPROG=gcc
+CFPROG=f77
+CCFOPT=-O3 -m64 -Wall _CCFLAGS_
+CCFDEB=-g3 -m64 -Wall _CCFLAGS_
+#-g3 pour avoir les macros dans gdb
+
+LKFOPT=
+MKPROG=make 
+MPCCPROG=mpif77
+ARFLAGS=ruv
+ARPROG=ar
+EXTRALIB=-L/net/cremi/mfaverge/acml3.6.0/gnu64/lib -lacml -lg2c -lm -lrt _LDFLAGS_
+
+VERSIONMPI=_mpi
+VERSIONSMP=_smp
+VERSIONSCH=_static
+VERSIONINT=_int
+VERSIONPRC=_simple
+VERSIONFLT=_real
+VERSIONORD=_scotch
+
+# uncomment the following lines for integer=long support
+#VERSIONINT=_long
+#CCPROG:=$(CCPROG) -DFORCE_LONG
+#MPCCPROG:=$(MPCCPROG) -DFORCE_LONG
+
+# uncomment the following lines for double precision support
+VERSIONPRC=_double
+CCPROG:=$(CCPROG) -DFORCE_DOUBLE
+MPCCPROG:=$(MPCCPROG) -DFORCE_DOUBLE
+
+# uncomment the following lines for float=complex support
+#VERSIONFLT=_complex
+#CCPROG:=$(CCPROG) -DFORCE_COMPLEX
+#MPCCPROG:=$(MPCCPROG) -DFORCE_COMPLEX
+
+# uncomment the following lines for sequential (NOMPI) version
+#VERSIONMPI=_nompi
+#CCPROG:=$(CCPROG) -DFORCE_NOMPI
+#MPCCPROG:=$(CCPROG)
+_MPCCPROG_
+
+# uncomment the following lines for non-threaded (NOSMP) version
+#VERSIONSMP=_nosmp
+#CCPROG:=$(CCPROG) -DFORCE_NOSMP
+#MPCCPROG:=$(MPCCPROG) -DFORCE_NOSMP
+
+# uncomment the following lines for local allocation (SMP version)
+#CCPROG:=$(CCPROG) -DNUMA_ALLOC
+#MPCCPROG:=$(MPCCPROG) -DNUMA_ALLOC
+
+# uncomment the following lines for using metis ordering 
+#VERSIONORD=_metis
+#METIS_HOME= metis-4.0
+#CCPROG:=$(CCPROG) -DMETIS
+#MPCCPROG:=$(MPCCPROG) -DMETIS
+#EXTRALIB:=$(EXTRALIB) -L$(METIS_HOME) -lmetis 
+
+
+#
+# MARCEL
+#
+#flags de bases pour marcel
+#CFLAGS_MARCEL=`pm2-config --cflags` -I${PM2_ROOT}/marcel/include/pthread
+#Flag pour l'utilistaion des bulles
+#CFLAGS_MARCEL:=${CFLAGS_MARCEL} -DPASTIX_DYNSCHED 
+#CFLAGS_MARCEL:=${CFLAGS_MARCEL} -DPASTIX_BUBBLESCHED 
+# VERSIONSCH=dyn
+# Flag pour attibuée aux bulles parentes les sous-arbres de charge faible
+#CFLAGS_MARCEL:=${CFLAGS_MARCEL} -DPASTIX_DYNSCHED_OVERHEAD
+
+# VERSIONSMP:=$(VERSIONSMP)_marcel
+CCFOPT:=$(CCFOPT) $(CFLAGS_MARCEL)
+CCFDEB:=$(CCFDEB) $(CFLAGS_MARCEL)
+#EXTRALIB:=$(EXTRALIB) `pm2-config --libs`
+#EXTRALIB:=$(EXTRALIB) -lpthread

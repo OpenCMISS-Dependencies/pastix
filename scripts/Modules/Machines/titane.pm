@@ -1,0 +1,27 @@
+$machines{'titane'} = 
+{
+    'nbcores'    => 8,
+    'mempernode' => 0,
+    'execcmd'    => '',
+    'template'   => 'titane.tpl',
+    'script'     => 'job.sh',
+    'submit'     => 'ccc_msub < ',
+    'time'       => "18000",
+    'args'       => "",
+    'argsbe'     => "",
+    'bits'       => "_64bits",
+    'hostarch'   => "i686_pc_linux",
+    'ccprog'     => "icc -Wall",
+    'f77prog'    => "ifort",
+    'mpccprog'   => "mpicc",
+    'mcfprog'    => "mpif90",
+    'ccfopt'     => "-O3",
+    'ccfdeb'     => "-O0 -g3",
+    'f90flags'   => "-fpp",
+    'ldflags'    => "-L/applications/intel/mkl/10.1.1.019/lib/em64t/ -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -L/applications/intel/fc/10.1.022/lib/ -lifcore -lm -lrt -lmpi_mt",
+    'ccflags'    => "-DNO_MPI_TYPE -DFIX_SCOTCH",
+    'lkfopt'     => "-s",
+    'arprog'     => "ar",
+    'arflags'    => "-ruv",
+    'makecmd'    => "make"
+}

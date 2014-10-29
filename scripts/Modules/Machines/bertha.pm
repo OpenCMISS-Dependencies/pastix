@@ -1,0 +1,28 @@
+$machines{'bertha'} = 
+{ #soumission en interactif sur vulcain -> pas de 'submit'
+    'nbcores'    => 96,
+    'mempernode' => 196,
+    'execcmd'    => '',
+    'template'   => 'berta.tpl',
+    'script'     => 'job.sh',
+    'submit'     => '',
+    #'time'       => "",
+    #'args'       => "",
+    #'argsbe'     => "",
+    'bits'       => "_64bits",
+    'hostarch'   => "i686_pc_linux",
+    'ccprog'     => "gcc",
+    'f77prog'    => "gfortran",
+    'mpccprog'   => "gcc",
+    'mcfprog'    => "gfortran",
+    'ccfopt'     => "-DFORCE_NOMPI -Wall -O3",
+    'ccfdeb'     => "-DFORCE_NOMPI -Wall -O0 -g3",
+    'f90flags'   => "-ffree-form -x f95-cpp-input",
+    'ldflags'    => "-L/opt/gotoblas2/ -lgoto2 -lgfortran -lm -lrt",
+    #'ldflags'    => "-L/opt/intel/Compiler/11.1/046/mkl/lib/em64t -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lgfortran -lm -lrt",
+    'ccflags'    => "",
+    'lkfopt'     => "-s",
+    'arprog'     => "ar",
+    'arflags'    => "-ruv",
+    'makecmd'    => "make"
+}

@@ -1,0 +1,27 @@
+$machines{'service'} = 
+{
+    'nbcores'    => 8,
+    'mempernode' => 0,
+    'execcmd'    => '',
+    'template'   => 'service-intel.tpl',
+    'script'     => 'job.sh',
+    'submit'     => 'qsub',
+    'time'       => "01:00:00",
+    'args'       => "",
+    'argsbe'     => "",
+    'bits'       => "_64bits",
+    'hostarch'   => "i686_pc_linux",
+    'ccprog'     => "icc -Wall",
+    'f77prog'    => "ifort",
+    'mpccprog'   => "mpicc",
+    'mcfprog'    => "mpif90",
+    'ccfopt'     => "-O3",
+    'ccfdeb'     => "-O0 -g3",
+    'f90flags'   => "-fpp",
+    'ldflags'    => "-L/opt/software/SGI/intel/mkl/10.0.3.020/lib/em64t/ -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -L/opt/software/SGI/intel/fce/10.1.017/lib -lifcore -lm -lrt -lmpi_mt",
+    'ccflags'    => "-DNO_MPI_TYPE -DFIX_SCOTCH",
+    'lkfopt'     => "-s",
+    'arprog'     => "ar",
+    'arflags'    => "-ruv",
+    'makecmd'    => "make"
+}

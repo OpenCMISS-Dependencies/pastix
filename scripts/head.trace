@@ -1,0 +1,151 @@
+%EventDef PajeDefineContainerType 1
+% Alias string 
+% ContainerType string 
+% Name string 
+%EndEventDef 
+%EventDef PajeDefineStateType 3
+% Alias string 
+% ContainerType string 
+% Name string 
+%EndEventDef 
+%EventDef PajeDefineEntityValue 6
+% Alias string  
+% EntityType string  
+% Name string  
+% Color color 
+%EndEventDef  
+%EventDef PajeCreateContainer 7
+% Time date  
+% Alias string  
+% Type string  
+% Container string  
+% Name string  
+%EndEventDef  
+%EventDef PajeDestroyContainer 8
+% Time date  
+% Name string  
+% Type string  
+%EndEventDef  
+%EventDef PajeSetState 10
+% Time date  
+% Type string  
+% Container string  
+% Value string  
+%EndEventDef 
+%EventDef PajeDefineLinkType 41
+% Alias string
+% Name string
+% ContainerType string
+% SourceContainerType string
+% DestContainerType string
+%EndEventDef
+%EventDef PajeStartLink 42
+% Time date
+% Type string
+% Container string
+% SourceContainer string
+% Value string
+% Key string
+%EndEventDef 
+%EventDef PajeEndLink 43
+% Time date
+% Type string
+% Container string
+% DestContainer string
+% Value string
+% Key string
+%EndEventDef 
+%EventDef PajeDefineVariableType 50
+% Alias string
+% Name  string
+% ContainerType string 
+%EndEventDef 
+%EventDef PajeSetVariable 51
+% Time date 
+% Type string 
+% Container string 
+% Value double 
+%EndEventDef  
+%EventDef PajeAddVariable 52
+% Time date 
+% Type string 
+% Container string 
+% Value double 
+%EndEventDef  
+%EventDef PajeSubVariable 53
+% Time date 
+% Type string 
+% Container string 
+% Value double 
+%EndEventDef
+1 CT_Net 0 "Network"
+1 CT_Node CT_Net "Node"
+1 CT_Proc CT_Node "Processor"
+3 ST_NodeState CT_Node "Node State"
+3 ST_ProcState CT_Proc "Processor State"
+6 SN_0  ST_NodeState "Repos"       "0.500000 0.500000 0.500000"
+6 SN_1  ST_NodeState "WaitLocal"   "0.000000 0.000000 0.000000"
+6 SN_2  ST_NodeState "WaitDistant" "0.025449 0.101796 0.025449"
+6 SN_3  ST_NodeState "WaitTask"    "0.083832 0.020958 0.083832"
+6 SN_4  ST_NodeState "FactoInit"   "1.000000 0.000000 0.000000"
+6 SN_5  ST_NodeState "FactoClean"  "0.000000 1.000000 0.000000"
+6 SN_6  ST_NodeState "Facto"       "0.000000 0.000000 1.000000"
+6 SN_7  ST_NodeState "UpdoInit"    "1.000000 1.000000 0.000000"
+6 SN_8  ST_NodeState "UpdoClean"   "1.000000 0.000000 1.000000"
+6 SN_9  ST_NodeState "Down"        "0.000000 1.000000 1.000000"
+6 SN_10 ST_NodeState "Up"          "0.800000 0.200000 0.500000"
+6 SN_11 ST_NodeState "Raff"        "0.500000 0.200000 0.800000"
+6 SN_14 ST_NodeState "Diag"        "0.500000 0.200000 0.800000"
+6 S_0   ST_ProcState "Repos"       "0.500000 0.500000 0.500000"
+6 S_1   ST_ProcState "WaitLocal"   "0.000000 0.000000 0.000000"
+6 S_2   ST_ProcState "WaitDistant" "0.025449 0.101796 0.025449"
+6 S_3   ST_ProcState "WaitTask"    "0.083832 0.020958 0.083832"
+6 S_4   ST_ProcState "FactoInit"   "1.000000 0.000000 0.000000"
+6 S_5   ST_ProcState "FactoClean"  "0.000000 1.000000 0.000000"
+6 S_6   ST_ProcState "Facto"       "0.000000 0.000000 1.000000"
+6 S_7   ST_ProcState "UpdoInit"    "1.000000 1.000000 0.000000"
+6 S_8   ST_ProcState "UpdoClean"   "1.000000 0.000000 1.000000"
+6 S_9   ST_ProcState "Down"        "0.000000 1.000000 1.000000"
+6 S_10  ST_ProcState "Up"          "0.800000 0.200000 0.500000"
+6 S_14  ST_ProcState "Diag"        "0.000000 0.000000 1.000000"
+6 S_15  ST_ProcState "Comp1d"      "0.000000 1.000000 0.000000"
+6 S_16  ST_ProcState "Comp1d+"     "0.000000 0.000000 1.000000"
+6 S_17  ST_ProcState "Comp1dgemm"  "1.000000 1.000000 0.000000"
+6 S_18  ST_ProcState "E1"          "0.000000 0.000000 0.800000"
+6 S_19  ST_ProcState "E2"          "0.800000 0.800000 0.000000"
+6 S_20  ST_ProcState "C0"  "0.000000 1.000000 0.262648"
+6 S_21  ST_ProcState "C1"  "1.000000 0.126571 0.115531"
+6 S_22  ST_ProcState "C2"  "0.678012 0.585890 0.572414"
+6 S_23  ST_ProcState "C3"  "0.431490 0.352541 0.825992"
+6 S_24  ST_ProcState "C4"  "0.109429 0.952316 0.576121"
+6 S_25  ST_ProcState "C5"  "0.937126 0.937126 0.000000"
+6 S_26  ST_ProcState "C6"  "0.861224 0.118748 0.680865"
+6 S_27  ST_ProcState "C7"  "0.149631 0.245870 0.986570"
+6 S_28  ST_ProcState "C8"  "0.791342 0.430408 0.683487"
+6 S_29  ST_ProcState "C9"  "0.645104 0.344740 0.075479"
+6 S_30  ST_ProcState "C10" "0.475664 0.800168 0.384453"
+6 S_31  ST_ProcState "C11" "0.637954 0.623448 0.219065"
+6 S_32  ST_ProcState "C12" "0.439797 0.059448 0.251671"
+6 S_33  ST_ProcState "C13" "0.892497 0.659163 0.774423"
+6 S_34  ST_ProcState "C14" "0.946577 0.265630 0.673409"
+6 S_35  ST_ProcState "C15" "0.042116 0.807604 0.663251"
+6 S_36  ST_ProcState "C16" "0.072075 0.032543 0.758662"
+6 S_37  ST_ProcState "C17" "0.572162 0.251889 0.405614"
+6 S_38  ST_ProcState "C18" "0.591789 0.791007 0.412646"
+6 S_39  ST_ProcState "C19" "0.050555 0.866883 0.977927"
+6 S_40  ST_ProcState "C20" "0.834017 0.043638 0.095864"
+6 S_41  ST_ProcState "C21" "0.762248 0.487886 0.186056"
+6 S_42  ST_ProcState "C22" "0.169417 0.108168 0.009708"
+6 S_43  ST_ProcState "C23" "0.103688 0.201410 0.874919"
+6 S_44  ST_ProcState "C24" "0.070248 0.433213 0.472522"
+6 S_45  ST_ProcState "C25" "0.685821 0.022366 0.143875"
+6 S_46  ST_ProcState "C26" "0.943944 0.052855 0.128522"
+6 S_47  ST_ProcState "C27" "0.314066 0.517852 0.786992"
+6 S_48  ST_ProcState "C28" "0.751318 0.412440 0.368137"
+6 S_49  ST_ProcState "C29" "0.718548 0.175021 0.243576"
+41 L_0 Fanin CT_Net CT_Proc CT_Proc
+41 L_1 Block CT_Net CT_Proc CT_Proc
+41 L_2 Down  CT_Net CT_Proc CT_Proc
+41 L_3 Up    CT_Net CT_Proc CT_Proc
+50 V_Mem Memoire CT_Node
+7 0.000000 C_Net0 CT_Net 0 "Ensemble0"

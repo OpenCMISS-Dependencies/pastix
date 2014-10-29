@@ -1,0 +1,126 @@
+regression is a set of python scripts used to configure, build and
+compile a set of project.
+
+The main file is regression.py
+  > python regression.py - will run a set of compilation and runs depending
+    on Conf/conf.py file.
+  > python regression.py --help will display an help
+     --export option will build sources from central repository.
+     --username=user will use user instead of default login as username.
+     other options should not be used directly but are used remotely,
+     changements may have to be done here.... 
+
+Conf/conf.pastix.py is an example of configuration file used to build
+and run PaStix on vulcain and plafrim.
+
+--------------
+
+remote-regression.py is the python script that will be run on remote
+machines to build and run test case. It will produces XML files that
+will be gathered on the master node and inserted into database.
+
+
+--------------
+
+The directory Machines defines machines where the projects can be built.
+
+  The Machine/machines.py file create a list of machines and a list of
+  remoteMachines.
+    
+  A remote machine is identify by an adress and a name.
+  it is a class that allows the following methods :
+    - remoteCallCommand(self, cmd) : to run a command via SSH
+    - fileCopyFrom(self, src, dest) : ~ scp machine:src dest
+    - fileCopyTo(self, src, dest) : ~ scp src machine:dest
+    - createConfig(self, name, machinename, nproc, rootdir, ...) :
+       Create a configuration list, to configure the build and run
+       (the part linked to the machine (compilers, libraries, ...))
+    - waitJobs(self, ident) : wait that all jobs have been runned
+      for current regression session (identified by ident =
+      yyyymmddhhmmss)
+  This class is defined in the file Machines/remoteMachines.py    
+
+  A machine is a list of build and run configuration parameters,
+  created by remoteMachine.createConfig().
+
+---------------
+
+The directory Projects defines projects to build and runs.
+
+The class project defined in Projects/project.py is used as a template
+for all projects.
+
+each project must define:
+  _name : A string, the name of the project.
+  _config : configuration file template.
+  _libraries : A dictionary 
+     _libraries["libname"] = ["liste", "of", "building", "commands"] 
+  _binaries : A dictionary
+     _binaries['simple'] = {
+            u'filename'  : u'simple',
+            u'build_dir' : u"example/src",
+            u'make_cmd'  : u"../bin/simple",
+            u'binary'    : u'example/bin/simple'}
+  _optionsComp : 
+     A dictionnary :
+        _optionsComp[u'INTEGER'] = {
+	   u'database_id' : u'INTEGER', # ID in database
+           u'default' : { # default value
+	      # dictionary used to replace keywords in configuration file
+              u'replace'      : { u'__VERSIONINT__': u'int_' ,
+                                  u'__INTSIZE__'   : u''},
+	      # value to insert in database			  
+              u'database_val' : u'int'
+              },
+	    #other values ...
+            u'int32'   : {
+                u'replace'      : { u'__VERSIONINT__': u'int32_' ,
+                                    u'__INTSIZE__'   : u'-DINTSIZE32' },
+                u'database_val' : u'int32',
+                u'searchInName' : re.compile(u'_int32')
+                }
+            #....
+            }
+
+  _parse_util["DATABASE_KEYWORD"] {
+            u"parse_key" : re.compile(u"regex"),
+            u"type"      : u"memory" or u'FLOAT'  ot
+            u'SMALLINT'....(all database types...)
+
+  _configFlags["CONFIG_KEY"] {
+      "machine_key" : "KEY_IN_MACHINE_CONF",
+      "default"     : "default value"
+  }
+
+
+  _runOne(self, binary, case, parameters, machine, options, revision,
+  ident) :
+     A method to prepare the run of one execution.
+   
+   getrevision(self) :
+     A method to get project revision
+
+
+   export(self, archive, rootdir, branches, ident) :
+     A method to get the source from repository
+
+   _checkError(self):
+     A method to correct errors and warning counter in function of
+     other metrics.
+
+---------------
+Database
+
+contains utilities to fill the database.
+
+---------------
+www
+
+The www directory contains a python website to access the database.
+
+---------------
+
+python sendMail.py send last results by mail.
+
+
+

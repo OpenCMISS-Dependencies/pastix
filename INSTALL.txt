@@ -1,0 +1,22 @@
+The PaStiX team recommands you to get Scotch (\url{http://gforge.inria.fr/projects/scotch/}) and compile it.
+
+Go into the main PaStiX directory and select the config file corresponding to your machine in PASTIX_DIR/config/ and copy it to PASTIX_DIR/config.in.
+
+Edit this file, select the options you want, and set the correct path for SCOTCH_HOME. If you want to use METIS, you also have to compile it and edit the path.
+
+Execute :
+
+ - make help       print this help
+ - make all        build PaStiX library in optimized compilation mode
+ - make debug      build PaStiX library in debug mode
+ - make drivers    build matrix drivers library
+ - make examples   build examples
+ - make murge      build murge examples
+ - make clean      remove all binaries and objects directories
+ - make cleanall   remove all binaries, objects and dependancies directories
+
+remark : murge examples are only available in distributed mode (PaStiX compiled with -DDISTRIBUTED)
+
+Read the quick reference card for more options (Doc/refcard.pdf)
+
+    

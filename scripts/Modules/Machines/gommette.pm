@@ -1,0 +1,27 @@
+$machines{'gommette'} = 
+{
+    'nbcores'    => 8,
+    'mempernode' => 0,
+    'execcmd'    => '',
+    'template'   => 'gommette.tpl',
+    'script'     => 'job.sh',
+    'submit'     => 'oarsub -S',
+    'time'       => "01:00:00",
+    'args'       => " -p'cluster=\"borderline\"' -t allow_classic_ssh",
+    'argsbe'     => " -p'cluster=\"borderline\"' -t allow_classic_ssh --type=besteffort",
+    #'bits'       => "",
+    #'hostarch'   => "",
+    #'ccprog'     => "",
+    #'f77prog'    => "",
+    #'mpccprog'   => "",
+    #'mcfprog'    => "",
+    #'ccfopt'     => "",
+    #'ccfdeb'     => "",
+    #'f90flags'   => "",
+    #'ldflags'    => "",
+    #'ccflags'    => "",
+    #'lkfopt'     => "",
+    #'arprog'     => "",
+    #'arflags'    => "",
+    #'makecmd'    => "make"
+}

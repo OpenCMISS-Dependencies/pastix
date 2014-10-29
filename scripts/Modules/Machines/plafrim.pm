@@ -1,0 +1,27 @@
+$machines{'devel'} = 
+{
+    'nbcores'    => 8,
+    'mempernode' => 24,
+    'execcmd'    => 'mpiexec',
+    'template'   => 'plafrim.tpl',
+    'script'     => 'job.sh',
+    'submit'     => 'qsub',
+    'time'       => "01:00:00",
+    'args'       => " ",
+    'argsbe'     => " ",
+    'bits'       => "_64bits",
+    'hostarch'   => "x86_64_linux",
+    'ccprog'     => "icc -Wall",
+    'f77prog'    => "ifort -Wall",
+    'mpccprog'   => "mpicc -Wall",
+    'mcfprog'    => "mpif90",
+    'ccfopt'     => "-O3",
+    'ccfdeb'     => "-O0 -g3",
+    'f90flags'   => "-fpp",
+    'ldflags'    => "-L/opt/intel/Compiler/11.1/069/mkl/lib/em64t/ -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -L/opt/intel/Compiler/11.1/069/lib/intel64/ -lifcore -lm -lrt",
+    'ccflags'    => "",
+    'lkfopt'     => "-s",
+    'arprog'     => "ar",
+    'arflags'    => "-ruv",
+    'makecmd'    => "make"
+}
