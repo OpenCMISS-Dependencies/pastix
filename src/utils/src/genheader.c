@@ -236,7 +236,7 @@ int main (int argc, char ** argv)
                                       strlen(murge_h)+
                                       strlen(header_m)+128)*sizeof(char))))
       return EXIT_FAILURE;
-    sprintf(cmd, "perl ./%s -f %s -c %d -r %d -s %d -l %d > %s;",
+    sprintf(cmd, "perl %s -f %s -c %d -r %d -s %d -l %d > %s;",
             genfort, murge_h, cplx,
             realsize, sintsize, intsize, header_m);
     if (-1 == system(cmd))
@@ -255,7 +255,7 @@ int main (int argc, char ** argv)
 #endif
     sprintf(cmd, "%s %s > %s.tmp; %s %s %s.tmp;",cmd,
             header_mp, header_mp, insertinc, header_m, header_mp);
-    fprintf(stdout, "%s\n", cmd);
+    //fprintf(stdout, "GENHEADER DEBUG: %s\n", cmd);
     if (0 != system(cmd))
       return 1;
     free(cmd);

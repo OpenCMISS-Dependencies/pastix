@@ -1,0 +1,21 @@
+SET(MD_SRC
+skitf.f		
+iohb.c		
+mmio.c		
+common_drivers.c	
+get_options.c
+read_matrix.c #multiarch as of here	
+rsaread.c		
+hbread.c		
+mmread.c		
+mmdread.c		
+petscread.c		
+cccread.c		
+olafread.c		
+chbread.c		
+cscdread.c		
+peerread.c		
+threefilesread.c	
+fdupread.c		
+laplacian.c
+)

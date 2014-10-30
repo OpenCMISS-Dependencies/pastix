@@ -148,7 +148,7 @@ void sopalin_option(void){
   fprintf(stdout, OUT_OPT_HEAD1);
   fprintf(stdout, OUT_OPT_HEAD2);
   fprintf(stdout, OUT_OPT_HEAD3);
-  fprintf(stdout, OUT_OPT_VERS,  VERSION);
+  //fprintf(stdout, OUT_OPT_VERS,  VERSION);
   fprintf(stdout, OUT_OPT_SMP,   smp?  "Defined":"Not defined");
   fprintf(stdout, OUT_OPT_MPI,   mpi?  "Defined":"Not defined");
   fprintf(stdout, OUT_OPT_DSCD,  bubb? "Defined":"Not defined");
