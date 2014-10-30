@@ -9,6 +9,8 @@ project(PASTIX VERSION 5.2.2.16 LANGUAGES C Fortran)
 # no hwloc
 # unclear on murge options
 # no scotch/metis support
+# building only parallel version
+
 
 if (OPENCMISS_DEPENDENCIES_LIBRARIES)
     SET(CMAKE_PREFIX_PATH ${OPENCMISS_DEPENDENCIES_CONFIGS_DIR} ${CMAKE_PREFIX_PATH})
@@ -19,38 +21,70 @@ else()
     SET(BUILD_TESTING ON)
     SET(USE_THREADS ON)
     SET(USE_CUDA OFF)
-    SET(USE_METIS OFF)
-    SET(USE_PTSCOTCH OFF)
+    SET(USE_METIS ON)
+    SET(USE_PTSCOTCH ON)
 endif()
 include(CMakePackageConfigHelpers)
 
 find_package(BLAS CONFIG REQUIRED)
 find_package(MPI REQUIRED)
 
-# Create the include directory
+# build double version (s,d,c,z)
+SET(BUILD_TYPE d)
+# integer versions (int32, long, int64)
+SET(INT_TYPE int32)
+SET(USE_STARPU OFF)
+SET(USE_MAGMABLAS OFF) # BLAS for GPU?!
+
+# Ensure the include directory exists
 SET(PASTIX_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 SET(PASTIX_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${PASTIX_INCLUDE_DIR})
 
-SET(BUILD_DOUBLE_PREC ON)
-SET(USE_STARPU OFF)
-SET(USE_MAGMABLAS OFF) # BLAS for GPU?!
-
-# Header file names
-SET(VERSIONINT _int)
-SET(VERSIONPRC _simple)
-SET(VERSIONFLT _real)
-SET(VERSIONTYPE ${VERSIONINT}${VERSIONPRC}${VERSIONFLT})
+SET(HOSTARCH i686_pc_linux)
 
 # it seems that sparsekit.f90 is not used
 #set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffree-form -x f95-cpp-input")
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
+set(CMAKE_C_COMPILER ${MPI_C_COMPILER})
+set(CMAKE_Fortan_COMPILER ${MPI_Fortran_COMPILER})
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 #set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3")
-add_definitions(-DINTSIZE32)
-if (BUILD_DOUBLE_PREC)
-    add_definitions(-DPREC_DOUBLE)
+SET(COMMON_DEFINITIONS VERSION=opencmiss X_ARCH${HOSTARCH} DOF_CONSTANT)
+########################################################################
+# Check for variable types and precision
+########################################################################
+SET(TYPE_DEFINITIONS )
+if (INT_TYPE STREQUAL long)
+    SET(VERSIONINT _long)
+    LIST(APPEND TYPE_DEFINITIONS FORCE_LONG INTSIZELONG)
+    message(STATUS "Building with long integers..")
+elseif(INT_TYPE STREQUAL int64)
+    SET(VERSIONINT _int64)
+    LIST(APPEND TYPE_DEFINITIONS INTSIZE64)
+    message(STATUS "Building with int64 integers..")
+elseif(INT_TYPE STREQUAL int32)
+    SET(VERSIONINT _int32)
+    LIST(APPEND TYPE_DEFINITIONS INTSIZE32)
+    message(STATUS "Building with int32 integers..")
+else()
+    message(FATAL_ERROR "Unknown integer type: ${INT_TYPE}")
 endif()
+SET(VERSIONPRC _simple)
+if(BUILD_TYPE STREQUAL s OR BUILD_TYPE STREQUAL d)
+    message(STATUS "Building double precision..")
+    LIST(APPEND TYPE_DEFINITIONS PREC_DOUBLE)
+    SET(VERSIONPRC _double)
+endif()
+SET(VERSIONFLT _real)
+if(BUILD_TYPE STREQUAL c OR BUILD_TYPE STREQUAL z)
+    message(STATUS "Building complex arithmetics..")
+    LIST(APPEND TYPE_DEFINITIONS TYPE_COMPLEX)
+    SET(VERSIONFLT _complex)
+endif()
+SET(VERSIONTYPE ${VERSIONINT}${VERSIONPRC}${VERSIONFLT})
+########################################################################
+
 if (NOT USE_THREADS)
     add_definitions(-DFORCE_NOSMP)
 endif()
@@ -61,13 +95,16 @@ endif()
 if (USE_PTSCOTCH)
     find_package(PTSCOTCH CONFIG REQUIRED)
     add_definitions(-DWITH_SCOTCH -DDISTRIBUTED)
+    message(STATUS "Using PT-Scotch ${PTSCOTCH_VERSION} orderings")
 elseif (USE_SCOTCH)
     find_package(SCOTCH CONFIG REQUIRED)
     add_definitions(-DWITH_SCOTCH)
+    message(STATUS "Using Scotch ${SCOTCH_VERSION} orderings")
 endif()
 if (USE_METIS)
     find_package(METIS 4 CONFIG REQUIRED)
     add_definitions(-DMETIS)
+    message(STATUS "Using Metis ${METIS_VERSION} orderings")
 endif()
 
 add_subdirectory(src)

@@ -24,9 +24,13 @@ IMPORT(kass/src KASS_SRC)
     
 add_library(pastix STATIC ${COMMON_SRC} ${SYMBOL_SRC} ${ORDER_SRC}
      ${SOPALIN_SRC} ${PERF_SRC} ${BLEND_SRC} ${FAX_SRC} ${KASS_SRC})
+target_compile_definitions(pastix PRIVATE
+    ${COMMON_DEFINITIONS} ${TYPE_DEFINITIONS}
+)
 target_link_libraries(pastix PUBLIC
     $<$<BOOL:${USE_PTSCOTCH}>:ptscotch>
     $<$<BOOL:${USE_SCOTCH}>:scotch>
+    $<$<BOOL:${USE_METIS}>:metis>
     blas
     ${CMAKE_Fortran_IMPLICIT_LIBRARIES})
 target_include_directories(pastix PRIVATE
