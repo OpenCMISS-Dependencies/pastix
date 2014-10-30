@@ -20,7 +20,6 @@ IMPORT(sopalin/src SOPALIN_SRC)
 IMPORT(blend/src BLEND_SRC)
 IMPORT(fax/src FAX_SRC)
 IMPORT(kass/src KASS_SRC)
-IMPORT(matrix_drivers/src MD_SRC)
 # still need: wrapper sparse-matrix
     
 add_library(pastix STATIC ${COMMON_SRC} ${SYMBOL_SRC} ${ORDER_SRC}
@@ -35,10 +34,5 @@ target_include_directories(pastix PRIVATE
     perf/src perf/src/num_recipes fax/src kass/src
     matrix_drivers/src
     ${MPI_C_INCLUDE_PATH} ${MPI_Fortran_INCLUDE_PATH})
-    
-add_library(matrix_driver STATIC ${MD_SRC})
-add_dependencies(matrix_driver headers)
-target_link_libraries(matrix_driver PUBLIC pastix)
-target_include_directories(matrix_driver PRIVATE
-    ${PASTIX_INCLUDE_DIR}
-    ${MPI_C_INCLUDE_PATH} ${MPI_Fortran_INCLUDE_PATH})
+
+add_subdirectory(matrix_drivers/src)

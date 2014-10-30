@@ -1,0 +1,1 @@
+s/\([ID]PARM_[A-Z_]*\)[ ]*=[ ]*\([0-9]*\).*/  if(!strcmp("\1", string)) { *value = \2\; return 0\;}/
