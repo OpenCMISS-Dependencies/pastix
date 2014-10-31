@@ -3,7 +3,7 @@ SET(SOPALIN_SRC bordi.c
 	 compute_context_nbr.c
 	 coefinit.c
 )
-SET(SOPALIN_SRC_MULTIARCH	 		
+SET(SOPALIN_SRC_MA	 		
  	csc_intern_build.c	
 	csc_intern_compute.c	
 	csc_intern_io.c		
@@ -30,15 +30,13 @@ SET(SOPALIN_SRC_MULTIARCH
 if (USE_STARPU)
     LIST(APPEND SOPALIN_SRC starpu_pastix_sched_policy.c)
     if (USE_CUDA)
-        LIST(APPEND SOPALIN_SRC_MULTIARCH sparse_gemm.cu geadd_cuda.cu getra_cuda.cu)
+        LIST(APPEND SOPALIN_SRC_MA sparse_gemm.cu geadd_cuda.cu getra_cuda.cu)
     endif()
     if (USE_MAGMABLAS)
-        LIST(APPEND SOPALIN_SRC_MULTIARCH 
+        LIST(APPEND SOPALIN_SRC_MA 
             zgetrf_stapiv_gpu.c
             zpotrf_stapiv_gpu.c
             zhetrf_stapiv_gpu.c
             zsytrf_stapiv_gpu.c)
     endif()
 endif()
-
-SET(SOPALIN_SRC ${SOPALIN_SRC} ${SOPALIN_SRC_MULTIARCH})

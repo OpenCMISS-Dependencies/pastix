@@ -6,3 +6,4 @@ symbol_fax.c
 symbol_faxi_graph.c
 symbol_faxi.c
 )
+SET(FAX_SRC_MA )

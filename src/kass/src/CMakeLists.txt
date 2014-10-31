@@ -8,5 +8,5 @@ SET(KASS_SRC
 	SF_level.c			
 	find_supernodes.c		
 	KSupernodes.c
-	sort_row.c #from multiarch
 )
+SET(KASS_SRC_MA sort_row.c)

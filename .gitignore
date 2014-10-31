@@ -3,3 +3,7 @@ include/
 src/sopalin/src/murge_pastix.inc.tmp
 src/matrix_drivers/src/api_str_to_int.c
 .gitignore~
+src/example/src/sutils.h
+src/example/src/dutils.h
+src/example/src/cutils.h
+src/example/src/zutils.h

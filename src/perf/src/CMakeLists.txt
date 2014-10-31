@@ -14,3 +14,4 @@ num_recipes/gaussj.c
 num_recipes/lfit.c
 num_recipes/nrutil.c
 )
+SET(PERF_SRC_MA )

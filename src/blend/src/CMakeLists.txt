@@ -30,3 +30,4 @@ SET(BLEND_SRC
 	smart_cblk_split.c		
 	blend_distributeOnGPU.c
 )
+SET(BLEND_SRC_MA )

@@ -50,7 +50,10 @@ set(CMAKE_C_COMPILER ${MPI_C_COMPILER})
 set(CMAKE_Fortan_COMPILER ${MPI_Fortran_COMPILER})
 #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 #set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3")
-SET(COMMON_DEFINITIONS VERSION=opencmiss X_ARCH${HOSTARCH} DOF_CONSTANT)
+SET(COMMON_DEFINITIONS 
+    VERSION=opencmiss
+    X_ARCH${HOSTARCH}
+    DOF_CONSTANT)
 ########################################################################
 # Check for variable types and precision
 ########################################################################

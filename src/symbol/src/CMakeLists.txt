@@ -12,3 +12,4 @@ SET(SYMBOL_SRC
 	symbol_nonzeros.c		
 	symbol_tree.c
 )
+SET(SYMBOL_SRC_MA )
