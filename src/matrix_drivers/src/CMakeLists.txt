@@ -9,39 +9,54 @@ execute_process(
 )
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/api_str_to_int.c.in
  ${CMAKE_CURRENT_SOURCE_DIR}/api_str_to_int.c @ONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/get_options.h
-    ${PASTIX_INCLUDE_DIR}/get_options.h COPYONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/read_matrix.h
-    ${PASTIX_INCLUDE_DIR}/read_matrix.h COPYONLY)    
 
 SET(MD_SRC
-skitf.f		
-iohb.c		
-mmio.c		
-common_drivers.c	
-get_options.c
-api_str_to_int.c
+    skitf.f		
+    iohb.c		
+    mmio.c		
+    common_drivers.c	
+    get_options.c
+    api_str_to_int.c
 )
 SET(MD_SRC_MA
-read_matrix.c
-rsaread.c		
-hbread.c		
-mmread.c		
-mmdread.c		
-petscread.c		
-cccread.c		
-olafread.c		
-chbread.c		
-cscdread.c		
-peerread.c		
-threefilesread.c	
-fdupread.c		
-laplacian.c
+    read_matrix.c
+    rsaread.c		
+    hbread.c		
+    mmread.c		
+    mmdread.c		
+    petscread.c		
+    cccread.c		
+    olafread.c		
+    chbread.c		
+    cscdread.c		
+    peerread.c		
+    threefilesread.c	
+    fdupread.c		
+    laplacian.c
 )
 
-add_library(matrix_driver STATIC ${MD_SRC} ${MD_SRC_MA})
-add_dependencies(matrix_driver headers)
+SET(OBJS )
+foreach(prec s d c z)
+    if(BUILD_PRECISION MATCHES [${prec}])
+        SETINCDIR(${prec})
+        add_library(${prec}matrix_driver OBJECT ${MD_SRC} ${MD_SRC_MA})
+        add_dependencies(${prec}matrix_driver ${prec}headers)
+        target_include_directories(${prec}matrix_driver PRIVATE
+            ${PASTIX_INCLUDE_DIR_PREC}
+            ${MPI_C_INCLUDE_PATH} ${MPI_Fortran_INCLUDE_PATH})
+        SETTYPEDEFS(${prec})
+        target_compile_definitions(${prec}matrix_driver
+            PRIVATE ${COMMON_DEFINITIONS} ${TYPEDEFS})
+        LIST(APPEND OBJS "$<TARGET_OBJECTS:${prec}matrix_driver>")
+        configure_file(read_matrix.h ${PASTIX_INCLUDE_DIR_PREC} COPYONLY)
+        configure_file(get_options.h ${PASTIX_INCLUDE_DIR_PREC} COPYONLY)
+    endif()
+endforeach()
+
+add_library(matrix_driver STATIC ${OBJS})
+set_target_properties(matrix_driver PROPERTIES OUTPUT_NAME pastix-matrix_driver-${PASTIX_VERSION}) 
 target_link_libraries(matrix_driver PUBLIC pastix)
-target_include_directories(matrix_driver PRIVATE
-    ${PASTIX_INCLUDE_DIR}
-    ${MPI_C_INCLUDE_PATH} ${MPI_Fortran_INCLUDE_PATH})
+SETINCDIR(${NEUTRAL_PRECISION})
+install(TARGETS matrix_driver EXPORT pastix-config
+    DESTINATION lib
+    INCLUDES DESTINATION ${PASTIX_INCDIR_SUFFIX_PREC})

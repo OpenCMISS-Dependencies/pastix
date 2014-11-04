@@ -3,7 +3,13 @@ SET(SOPALIN_SRC bordi.c
 	 compute_context_nbr.c
 	 coefinit.c
 )
-SET(SOPALIN_SRC_MA	 		
+SET(SRC_FAC
+    sopalin3d.c		
+	starpu_submit_tasks.c	
+	csc_intern_compute.c	
+	raff_functions.c	
+	starpu_updo.c)
+SET(SOPALIN_SRC_MA
  	csc_intern_build.c	
 	csc_intern_compute.c	
 	csc_intern_io.c		
@@ -21,11 +27,7 @@ SET(SOPALIN_SRC_MA
 	sopalin_option.c	
 	sparse_gemm_cpu.c	
 	tools.c
-	sopalin3d.c		
-	starpu_submit_tasks.c	
-	csc_intern_compute.c	
-	raff_functions.c	
-	starpu_updo.c
+	${SRC_FAC}
 )
 if (USE_STARPU)
     LIST(APPEND SOPALIN_SRC starpu_pastix_sched_policy.c)
@@ -38,5 +40,73 @@ if (USE_STARPU)
             zpotrf_stapiv_gpu.c
             zhetrf_stapiv_gpu.c
             zsytrf_stapiv_gpu.c)
+    endif()
+endif()
+
+# add tests
+if (BUILD_TESTS)
+    macro(ADDTEST basename)
+        add_executable(${basename} ${basename}.c)
+        target_link_libraries(${basename} pastix matrix_driver)
+        target_include_directories(${basename} PRIVATE
+            ${PASTIX_INCLUDE_DIR_PREC}
+            ../../common/src
+        ) 
+        add_test(${basename} ${basename} ${args})
+        foreach(prec s d c z)
+            if(BUILD_PRECISION MATCHES [${prec}])
+                SETINCDIR(${prec})
+                add_executable(${prec}${basename} ${basename}.c)
+                target_link_libraries(${prec}${basename} pastix matrix_driver)
+                target_include_directories(${prec}${basename} PRIVATE
+                    ${PASTIX_INCLUDE_DIR_PREC}
+                    ../../common/src
+                )
+                add_test(${prec}${basename} ${prec}${basename} ${args}) 
+            endif()
+        endforeach()
+    endmacro()
+    macro(ADDTEST_MPI basename np)
+        add_executable(${basename} ${basename}.c)
+        target_link_libraries(${basename} pastix matrix_driver)
+        target_compile_definitions(${basename} PRIVATE NODESIZE=8)
+        target_include_directories(${basename} PRIVATE
+            ${PASTIX_INCLUDE_DIR_PREC}
+            ${MPI_C_INCLUDE_PATH}
+            ../../common/src
+        ) 
+        add_test(${basename} 
+           ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} ${np} ${CMAKE_CURRENT_BINARY_DIR}/${basename})
+    endmacro()
+    #ADDTEST(test_gemm) seems to hang up
+    ADDTEST(test_axpy)
+    ADDTEST(test_copy)
+    ADDTEST(test_scal)
+    ADDTEST(test_gemv)
+    ADDTEST(test_trsv)
+    if (USE_CUDA)
+        ADDTEST(test_sparse_gemm "1000;100;100")
+        ADDTEST(test_geadd "1000;10000")
+        ADDTEST(test_getra "1000;10000")
+        ADDTEST(test_getrf "1000;10000")
+    endif()
+    if (MPI_FOUND)
+        SET(NODESIZE2 16)
+        ADDTEST_MPI(pingpong_1 2)
+        ADDTEST_MPI(pingpong_1e ${NODESIZE2})
+        ADDTEST_MPI(pingpong_2 4)
+        ADDTEST_MPI(pingpong_2e ${NODESIZE2})
+        ADDTEST_MPI(pingpong_4 8)
+        ADDTEST_MPI(pingpong_4e ${NODESIZE2})
+        ADDTEST_MPI(pingpong_8 16)
+        ADDTEST_MPI(pingpong_8e ${NODESIZE2})
+        ADDTEST_MPI(pingpong_n1 2)
+        ADDTEST_MPI(pingpong_n1e ${NODESIZE2})
+        ADDTEST_MPI(pingpong_n2 4)
+        ADDTEST_MPI(pingpong_n2e ${NODESIZE2})
+        ADDTEST_MPI(pingpong_n4 8)
+        ADDTEST_MPI(pingpong_n4e ${NODESIZE2})
+        ADDTEST_MPI(pingpong_n8 16)
+        ADDTEST_MPI(pingpong_n8e ${NODESIZE2})
     endif()
 endif()

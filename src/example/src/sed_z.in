@@ -1,0 +1,25 @@
+s/PaStiX::pastix_float_t/std::complex<double>/        
+s/pastix_float_t/double complex/                      
+s/MPI_PASTIX_FLOAT/MPI_DOUBLE_COMPLEX/                
+s/\"utils.h\"/\"zutils.h\"/                           
+s/\"utils.hpp\"/\"zutils.hpp\"/                       
+s/ read_matrix(/ z_read_matrix(/                      
+s/ dread_matrix(/ z_dread_matrix(/                    
+s/ pastix_checkMatrix(/ z_pastix_checkMatrix(/        
+s/ pastix_getLocalNodeNbr(/ z_pastix_getLocalNodeNbr(/
+s/ pastix_getLocalNodeLst(/ z_pastix_getLocalNodeLst(/
+s/ cscd_redispatch(/ z_cscd_redispatch(/              
+s/ pastix(/ z_pastix(/                                
+s/PRINT_RHS(/PRINT_RHS_CPLX(/                         
+s/CONJ(/CONJ_DCPLX(/                                  
+s/ dpastix(/z_dpastix(/                               
+s/murge.h/zmurge.h/                                   
+s/\([ (]\)MURGE_\([^ ]*\)*(/\1ZMURGE_\2(/             
+s/:read_matrix(/:z_read_matrix(/                      
+s/:dread_matrix(/:z_dread_matrix(/                    
+s/:pastix_checkMatrix(/:z_pastix_checkMatrix(/        
+s/:pastix_getLocalNodeNbr(/:z_pastix_getLocalNodeNbr(/
+s/:pastix_getLocalNodeLst(/:z_pastix_getLocalNodeLst(/
+s/:cscd_redispatch(/:z_cscd_redispatch(/              
+s/:pastix(/:z_pastix(/                                
+s/:dpastix(/:z_dpastix(/

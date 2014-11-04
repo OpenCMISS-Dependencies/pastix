@@ -1,63 +1,76 @@
-add_executable(genheader genheader.c)
-target_include_directories(genheader PRIVATE
-    ../../common/src)
+# Need different gen_header binary for each precision
+# (dont ask me...)
+SET(DONE )
+foreach(prec s d c z)
+    if(BUILD_PRECISION MATCHES [${prec}])
+        add_executable(${prec}genheader genheader.c)
+        SET(TYPEDEFS )
+        if (${prec} MATCHES [dz])
+            LIST(APPEND TYPEDEFS PREC_DOUBLE)     
+        endif()
+        if (${prec} MATCHES [cz])
+            LIST(APPEND TYPEDEFS TYPE_COMPLEX)     
+        endif()
+        target_compile_definitions(${prec}genheader
+            PRIVATE ${COMMON_DEFINITIONS} ${TYPEDEFS})
+        target_include_directories(${prec}genheader PRIVATE
+            ../../common/src)
 
-SET(PASTIXH ${PASTIX_INCLUDE_DIR}/pastix.h)
-SET(PASTIXH_VERSION ${PASTIX_INCLUDE_DIR}/pastix${VERSIONTYPE}.h)
-SET(PASTIXFH ${PASTIX_INCLUDE_DIR}/pastix_fortran.h)
-SET(PASTIXFH_VERSION ${PASTIX_INCLUDE_DIR}/pastix_fortran${VERSIONTYPE}.h)
-SET(MURGEINC ${PASTIX_INCLUDE_DIR}/murge.inc)
-SET(MURGEINC_VERSION ${PASTIX_INCLUDE_DIR}/murge${VERSIONTYPE}.inc)
-SET(CSCDUTIL ${PASTIX_INCLUDE_DIR}/cscd_utils.h)
-SET(CSCDUTIL_VERSION ${PASTIX_INCLUDE_DIR}/cscd_utils${VERSIONTYPE}.h)
-
-add_custom_target(headers
-    # C
-    COMMAND genheader ${PASTIXH_VERSION} ${PASTIXFH_VERSION} ${MURGEINC_VERSION}
-        ${PASTIX_SRC}/sopalin/src/murge_pastix.inc
-        ${PASTIX_SRC}/murge/include/murge.h
-        ${PASTIX_SRC}/murge/scripts/genfort.pl
-        ${PASTIX_SRC}/utils/src/insert-fortran-inc.sh C
-    COMMAND ${CMAKE_COMMAND} 
-        -DFILE=${PASTIX_SRC}/sopalin/src/pastix.h
-        -DTARGET=${PASTIXH_VERSION}
-        -P ${PASTIX_SOURCE_DIR}/Append.cmake 
-    COMMAND ${CMAKE_COMMAND} 
-        -DFILE=${PASTIX_SRC}/common/src/api.h
-        -DTARGET=${PASTIXH_VERSION}
-        -P ${PASTIX_SOURCE_DIR}/Append.cmake
-    COMMAND ${CMAKE_COMMAND} -E copy ${PASTIXH_VERSION} ${PASTIXH}
-    # Fortran
-    COMMAND genheader ${PASTIXH_VERSION} ${PASTIXFH_VERSION} ${MURGEINC_VERSION}
-        ${PASTIX_SRC}/sopalin/src/murge_pastix.inc
-        ${PASTIX_SRC}/murge/include/murge.h
-        ${PASTIX_SRC}/murge/scripts/genfort.pl
-        ${PASTIX_SRC}/utils/src/insert-fortran-inc.sh Fortran
-    COMMAND ${CMAKE_COMMAND} 
-        -DFILE=${PASTIX_SRC}/common/src/pastix_fortran.h
-        -DTARGET=${PASTIXFH_VERSION}
-        -P ${PASTIX_SOURCE_DIR}/Append.cmake 
-    COMMAND ${CMAKE_COMMAND} -E copy ${PASTIXFH_VERSION} ${PASTIXFH}
-    # Murge
-    COMMAND genheader ${PASTIXH_VERSION} ${PASTIXFH_VERSION} ${MURGEINC_VERSION}
-        ${PASTIX_SRC}/sopalin/src/murge_pastix.inc
-        ${PASTIX_SRC}/murge/include/murge.h
-        ${PASTIX_SRC}/murge/scripts/genfort.pl
-        ${PASTIX_SRC}/utils/src/insert-fortran-inc.sh Murge
-    COMMAND ${CMAKE_COMMAND} 
-        -DFILE=${PASTIX_SRC}/common/src/pastix_fortran.inc
-        -DTARGET=${MURGEINC_VERSION}
-        -P ${PASTIX_SOURCE_DIR}/Append.cmake
-    COMMAND ${CMAKE_COMMAND} -E copy ${MURGEINC_VERSION} ${MURGEINC}
-    # CSCD Utils
-    COMMAND genheader ${CSCDUTIL_VERSION} ${PASTIXFH_VERSION} ${MURGEINC_VERSION}
-        ${PASTIX_SRC}/sopalin/src/murge_pastix.inc
-        ${PASTIX_SRC}/murge/include/murge.h
-        ${PASTIX_SRC}/murge/scripts/genfort.pl
-        ${PASTIX_SRC}/utils/src/insert-fortran-inc.sh C
-    COMMAND ${CMAKE_COMMAND} 
-        -DFILE=${PASTIX_SRC}/sopalin/src/cscd_utils.h
-        -DTARGET=${CSCDUTIL_VERSION}
-        -P ${PASTIX_SOURCE_DIR}/Append.cmake 
-    COMMAND ${CMAKE_COMMAND} -E copy ${CSCDUTIL_VERSION} ${CSCDUTIL}
-)
+        SETINCDIR(${prec})
+        SET(PASTIXH ${PASTIX_INCLUDE_DIR_PREC}/pastix.h)
+        SET(PASTIXFH ${PASTIX_INCLUDE_DIR_PREC}/pastix_fortran.h)
+        SET(MURGEINC ${PASTIX_INCLUDE_DIR_PREC}/murge.inc)
+        SET(CSCDUTIL ${PASTIX_INCLUDE_DIR_PREC}/cscd_utils.h)
+        add_custom_target(${prec}headers
+        # C
+        COMMAND ${prec}genheader ${PASTIXH} ${PASTIXFH} ${MURGEINC}
+            ${PASTIX_SRC}/sopalin/src/murge_pastix.inc
+            ${PASTIX_SRC}/murge/include/murge.h
+            ${PASTIX_SRC}/murge/scripts/genfort.pl
+            ${PASTIX_SRC}/utils/src/insert-fortran-inc.sh C
+        COMMAND ${CMAKE_COMMAND} 
+            -DFILE=${PASTIX_SRC}/sopalin/src/pastix.h
+            -DTARGET=${PASTIXH}
+            -P ${PASTIX_SOURCE_DIR}/Append.cmake 
+        COMMAND ${CMAKE_COMMAND} 
+            -DFILE=${PASTIX_SRC}/common/src/api.h
+            -DTARGET=${PASTIXH}
+            -P ${PASTIX_SOURCE_DIR}/Append.cmake
+        # Fortran
+        COMMAND ${prec}genheader ${PASTIXH} ${PASTIXFH} ${MURGEINC}
+            ${PASTIX_SRC}/sopalin/src/murge_pastix.inc
+            ${PASTIX_SRC}/murge/include/murge.h
+            ${PASTIX_SRC}/murge/scripts/genfort.pl
+            ${PASTIX_SRC}/utils/src/insert-fortran-inc.sh Fortran
+        COMMAND ${CMAKE_COMMAND} 
+            -DFILE=${PASTIX_SRC}/common/src/pastix_fortran.h
+            -DTARGET=${PASTIXFH}
+            -P ${PASTIX_SOURCE_DIR}/Append.cmake 
+        # Murge
+        COMMAND ${prec}genheader ${PASTIXH} ${PASTIXFH} ${MURGEINC}
+            ${PASTIX_SRC}/sopalin/src/murge_pastix.inc
+            ${PASTIX_SRC}/murge/include/murge.h
+            ${PASTIX_SRC}/murge/scripts/genfort.pl
+            ${PASTIX_SRC}/utils/src/insert-fortran-inc.sh Murge
+        COMMAND ${CMAKE_COMMAND} 
+            -DFILE=${PASTIX_SRC}/common/src/pastix_fortran.inc
+            -DTARGET=${MURGEINC}
+            -P ${PASTIX_SOURCE_DIR}/Append.cmake
+        # CSCD Utils
+        COMMAND ${prec}genheader ${CSCDUTIL} ${PASTIXFH} ${MURGEINC}
+            ${PASTIX_SRC}/sopalin/src/murge_pastix.inc
+            ${PASTIX_SRC}/murge/include/murge.h
+            ${PASTIX_SRC}/murge/scripts/genfort.pl
+            ${PASTIX_SRC}/utils/src/insert-fortran-inc.sh C
+        COMMAND ${CMAKE_COMMAND} 
+            -DFILE=${PASTIX_SRC}/sopalin/src/cscd_utils.h
+            -DTARGET=${CSCDUTIL}
+            -P ${PASTIX_SOURCE_DIR}/Append.cmake 
+        )
+        # Ensure the genheader targets are run after another (write race conditions)
+        foreach(doneprec ${DONE})
+            add_dependencies(${prec}genheader ${doneprec}genheader)
+        endforeach()
+        LIST(APPEND DONE ${prec})
+    endif()
+endforeach()

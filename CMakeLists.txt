@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(PASTIX VERSION 5.2.2.16 LANGUAGES C Fortran)
+project(PASTIX VERSION 5.2.2.16 LANGUAGES C Fortran CXX)
 
 # no starpu yet
 # no cuda support yet
@@ -8,44 +8,37 @@ project(PASTIX VERSION 5.2.2.16 LANGUAGES C Fortran)
 # no semaphore barrier
 # no hwloc
 # unclear on murge options
-# no scotch/metis support
 # building only parallel version
 
+# Hints:
+# src/* builds libpastix
+# src/utils creates the different headers for each precision
+# src/matrix_drivers uses those headers for the matrix_drivers library
+# So far: unclear how pastix is going to be used, so we go with this version now.
 
-if (OPENCMISS_DEPENDENCIES_LIBRARIES)
-    SET(CMAKE_PREFIX_PATH ${OPENCMISS_DEPENDENCIES_CONFIGS_DIR} ${CMAKE_PREFIX_PATH})
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OPENCMISS_DEPENDENCIES_LIBRARIES})
-else()
-    SET(CMAKE_PREFIX_PATH ../cmake/release ../cmake/debug ${CMAKE_PREFIX_PATH})
-    SET(OPENCMISS_DEPENDENCIES_CONFIGS_DIR ${CMAKE_CURRENT_BINARY_DIR})
-    SET(BUILD_TESTING ON)
-    SET(USE_THREADS ON)
-    SET(USE_CUDA OFF)
-    SET(USE_METIS ON)
-    SET(USE_PTSCOTCH ON)
-endif()
+option(BUILD_TESTS "${PROJECT_NAME} - Build tests" ON)
+set(BUILD_PRECISION sdcz CACHE STRING "${PROJECT_NAME} - Build precisions (sdcz)")
+set(INT_TYPE int32 CACHE STRING "${PROJECT_NAME} - Integer version (int32, long, int64)")
+option(USE_THREADS "Use PTHREAD library" ON)
+option(USE_METIS "Use METIS 4 orderings" ON)
+option(USE_PTSCOTCH "Use PT-Scotch orderings (will include Scotch)" ON)
+option(USE_SCOTCH "Use Scotch orderings" OFF)
+# Not yet implemented to be ON
+SET(USE_CUDA OFF)
+SET(USE_STARPU OFF)
+SET(USE_MAGMABLAS OFF) # BLAS for GPU?!
+
 include(CMakePackageConfigHelpers)
 
 find_package(BLAS CONFIG REQUIRED)
 find_package(MPI REQUIRED)
 
-# build double version (s,d,c,z)
-SET(BUILD_TYPE d)
-# integer versions (int32, long, int64)
-SET(INT_TYPE int32)
-SET(USE_STARPU OFF)
-SET(USE_MAGMABLAS OFF) # BLAS for GPU?!
-
-# Ensure the include directory exists
-SET(PASTIX_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
-SET(PASTIX_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src)
-execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${PASTIX_INCLUDE_DIR})
-
-SET(HOSTARCH i686_pc_linux)
+if (BUILD_TESTS)
+    enable_testing()
+endif()
 
 # it seems that sparsekit.f90 is not used
 #set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffree-form -x f95-cpp-input")
-
 set(CMAKE_C_COMPILER ${MPI_C_COMPILER})
 set(CMAKE_Fortan_COMPILER ${MPI_Fortran_COMPILER})
 #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
@@ -57,36 +50,43 @@ SET(COMMON_DEFINITIONS
 ########################################################################
 # Check for variable types and precision
 ########################################################################
-SET(TYPE_DEFINITIONS )
 if (INT_TYPE STREQUAL long)
     SET(VERSIONINT _long)
-    LIST(APPEND TYPE_DEFINITIONS FORCE_LONG INTSIZELONG)
+    LIST(APPEND COMMON_DEFINITIONS FORCE_LONG INTSIZELONG)
     message(STATUS "Building with long integers..")
 elseif(INT_TYPE STREQUAL int64)
     SET(VERSIONINT _int64)
-    LIST(APPEND TYPE_DEFINITIONS INTSIZE64)
+    LIST(APPEND COMMON_DEFINITIONS INTSIZE64)
     message(STATUS "Building with int64 integers..")
 elseif(INT_TYPE STREQUAL int32)
     SET(VERSIONINT _int32)
-    LIST(APPEND TYPE_DEFINITIONS INTSIZE32)
+    LIST(APPEND COMMON_DEFINITIONS INTSIZE32)
     message(STATUS "Building with int32 integers..")
 else()
     message(FATAL_ERROR "Unknown integer type: ${INT_TYPE}")
 endif()
-SET(VERSIONPRC _simple)
-if(BUILD_TYPE STREQUAL s OR BUILD_TYPE STREQUAL d)
-    message(STATUS "Building double precision..")
-    LIST(APPEND TYPE_DEFINITIONS PREC_DOUBLE)
-    SET(VERSIONPRC _double)
-endif()
-SET(VERSIONFLT _real)
-if(BUILD_TYPE STREQUAL c OR BUILD_TYPE STREQUAL z)
-    message(STATUS "Building complex arithmetics..")
-    LIST(APPEND TYPE_DEFINITIONS TYPE_COMPLEX)
-    SET(VERSIONFLT _complex)
-endif()
-SET(VERSIONTYPE ${VERSIONINT}${VERSIONPRC}${VERSIONFLT})
 ########################################################################
+
+# Ensure the include directory exists
+SET(PASTIX_INCDIR_SUFFIX ${INT_TYPE})
+SET(PASTIX_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include/${PASTIX_INCDIR_SUFFIX})
+SET(PASTIX_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${PASTIX_INCLUDE_DIR})
+
+macro(SETINCDIR precision)
+    SET(PASTIX_INCLUDE_DIR_PREC ${PASTIX_INCLUDE_DIR}/${precision})
+    SET(PASTIX_INCDIR_SUFFIX_PREC ${PASTIX_INCDIR_SUFFIX}/${precision})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${PASTIX_INCLUDE_DIR_PREC})
+endmacro()
+macro(SETTYPEDEFS precision)
+    SET(TYPEDEFS )
+    if (precision MATCHES [dz])
+        LIST(APPEND TYPEDEFS PREC_DOUBLE)     
+    endif()
+    if (precision MATCHES [cz])
+        LIST(APPEND TYPEDEFS TYPE_COMPLEX)     
+    endif()
+endmacro()
 
 if (NOT USE_THREADS)
     add_definitions(-DFORCE_NOSMP)
@@ -96,13 +96,17 @@ if (NOT USE_CUDA)
 endif()
 
 if (USE_PTSCOTCH)
-    find_package(PTSCOTCH CONFIG REQUIRED)
-    add_definitions(-DWITH_SCOTCH -DDISTRIBUTED)
-    message(STATUS "Using PT-Scotch ${PTSCOTCH_VERSION} orderings")
-elseif (USE_SCOTCH)
+    SET(USE_SCOTCH ON)
+endif()
+if (USE_SCOTCH)
     find_package(SCOTCH CONFIG REQUIRED)
     add_definitions(-DWITH_SCOTCH)
     message(STATUS "Using Scotch ${SCOTCH_VERSION} orderings")
+endif()
+if (USE_PTSCOTCH)
+    find_package(PTSCOTCH CONFIG REQUIRED)
+    add_definitions(-DDISTRIBUTED)
+    message(STATUS "Using PT-Scotch ${PTSCOTCH_VERSION} orderings")
 endif()
 if (USE_METIS)
     find_package(METIS 4 CONFIG REQUIRED)
@@ -110,4 +114,24 @@ if (USE_METIS)
     message(STATUS "Using Metis ${METIS_VERSION} orderings")
 endif()
 
+foreach(prec s d c z)
+    if(BUILD_PRECISION MATCHES [${prec}])
+        # We need a neutral precision for notype-includes
+        if(NOT NEUTRAL_PRECISION)
+            SET(NEUTRAL_PRECISION ${prec})
+        endif()
+        message(STATUS "Building pastix precision '${prec}'")
+    endif()
+endforeach()
+if(NOT NEUTRAL_PRECISION)
+    message(FATAL_ERROR "No build precision set. Please set BUILD_PRECISION accordingly")
+endif()
+
 add_subdirectory(src)
+
+install(DIRECTORY include/ DESTINATION include/pastix)
+install(EXPORT pastix-config DESTINATION lib/cmake)
+include(CMakePackageConfigHelpers)
+WRITE_BASIC_PACKAGE_VERSION_FILE(${CMAKE_CURRENT_BINARY_DIR}/pastix-config-version.cmake
+    VERSION ${METIS_VERSION} COMPATIBILITY AnyNewerVersion)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/pastix-config-version.cmake DESTINATION lib/cmake)

@@ -174,9 +174,9 @@ int main (int argc, char ** argv)
       "#      ifndef COMPLEXFLOAT_\n"
       "#        define COMPLEXFLOAT_\n"
       "#      endif\n"
-      "#      typedef std::complex<float> pastix_float_t;\n"
+      "      typedef std::complex<float> pastix_float_t;\n"
       "#    else\n"
-      "#      typedef float complex pastix_float_t;\n"
+      "      typedef float complex pastix_float_t;\n"
       "#    endif\n");
     fprintf(file, "#    define MPI_PASTIX_FLOAT MPI_COMPLEX\n");
     fprintf(file, "#    define PASTIX_FLOAT            pastix_float_t\n");

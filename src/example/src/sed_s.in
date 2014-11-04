@@ -1,0 +1,25 @@
+s/PaStiX::pastix_float_t/float/g               
+s/pastix_float_t/float/g                               
+s/MPI_PASTIX_FLOAT/MPI_FLOAT/g                         
+s/\"utils.h\"/\"sutils.h\"/g                           
+s/\"utils.hpp\"/\"sutils.hpp\"/g                       
+s/ read_matrix(/ s_read_matrix(/g                      
+s/ dread_matrix(/ s_dread_matrix(/g                    
+s/ pastix_checkMatrix(/ s_pastix_checkMatrix(/g        
+s/ pastix_getLocalNodeNbr(/ s_pastix_getLocalNodeNbr(/g
+s/ pastix_getLocalNodeLst(/ s_pastix_getLocalNodeLst(/g
+s/ cscd_redispatch(/ s_cscd_redispatch(/g              
+s/ pastix(/ s_pastix(/g                                
+s/PRINT_RHS(/PRINT_RHS_REAL(/g                         
+s/CONJ(/CONJ_REAL(/g                                   
+s/ dpastix(/ s_dpastix(/g                              
+s/\([ (]\)MURGE_\([^ ]*\)*(/\1SMURGE_\2(/g             
+s/murge.h/smurge.h/g                                   
+s/:read_matrix(/:s_read_matrix(/g                      
+s/:dread_matrix(/:s_dread_matrix(/g                    
+s/:pastix_checkMatrix(/:s_pastix_checkMatrix(/g        
+s/:pastix_getLocalNodeNbr(/:s_pastix_getLocalNodeNbr(/g
+s/:pastix_getLocalNodeLst(/:s_pastix_getLocalNodeLst(/g
+s/:cscd_redispatch(/:s_cscd_redispatch(/g              
+s/:pastix(/:s_pastix(/g                                
+s/:dpastix(/:s_dpastix(/g
