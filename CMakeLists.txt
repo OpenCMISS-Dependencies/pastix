@@ -68,8 +68,8 @@ endif()
 ########################################################################
 
 # Ensure the include directory exists
-SET(PASTIX_INCDIR_SUFFIX ${INT_TYPE})
-SET(PASTIX_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include/${PASTIX_INCDIR_SUFFIX})
+SET(PASTIX_INCDIR_SUFFIX include/pastix/${INT_TYPE})
+SET(PASTIX_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${PASTIX_INCDIR_SUFFIX})
 SET(PASTIX_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${PASTIX_INCLUDE_DIR})
 
@@ -96,18 +96,15 @@ if (NOT USE_CUDA)
 endif()
 
 if (USE_PTSCOTCH)
-    SET(USE_SCOTCH ON)
-endif()
-if (USE_SCOTCH)
+    find_package(PTSCOTCH CONFIG REQUIRED)
+    add_definitions(-DWITH_SCOTCH -DDISTRIBUTED)
+    message(STATUS "Using PT-Scotch ${PTSCOTCH_VERSION} orderings")
+elseif (USE_SCOTCH)
     find_package(SCOTCH CONFIG REQUIRED)
     add_definitions(-DWITH_SCOTCH)
     message(STATUS "Using Scotch ${SCOTCH_VERSION} orderings")
 endif()
-if (USE_PTSCOTCH)
-    find_package(PTSCOTCH CONFIG REQUIRED)
-    add_definitions(-DDISTRIBUTED)
-    message(STATUS "Using PT-Scotch ${PTSCOTCH_VERSION} orderings")
-endif()
+
 if (USE_METIS)
     find_package(METIS 4 CONFIG REQUIRED)
     add_definitions(-DMETIS)
@@ -129,7 +126,7 @@ endif()
 
 add_subdirectory(src)
 
-install(DIRECTORY include/ DESTINATION include/pastix)
+install(DIRECTORY include/ DESTINATION include)
 install(EXPORT pastix-config DESTINATION lib/cmake)
 include(CMakePackageConfigHelpers)
 WRITE_BASIC_PACKAGE_VERSION_FILE(${CMAKE_CURRENT_BINARY_DIR}/pastix-config-version.cmake

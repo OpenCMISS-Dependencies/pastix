@@ -8,7 +8,7 @@ endif()
 macro(ADDEXEC name src)
     #message(STATUS "adding executable ${name} with incdir: ${PASTIX_INCLUDE_DIR_PREC}")
     add_executable(${name} ${src})
-    target_link_libraries(${name} pastix matrix_driver)
+    target_link_libraries(${name} pastix pastix-matrix-driver)
     target_include_directories(${name} PRIVATE
         ${PASTIX_INCLUDE_DIR_PREC}
     )    
@@ -54,13 +54,13 @@ if (MPI_FOUND)
     ADDEXEC(multi-comm-step multi-comm-step.c)
     # Fortran examples
     add_library(futils OBJECT utils.F90)
-    add_dependencies(futils matrix_driver)
+    add_dependencies(futils pastix-matrix-driver)
     target_include_directories(futils PRIVATE
         ${PASTIX_INCLUDE_DIR_PREC}
     ) 
     macro(ADDEXECF name src)
         add_executable(${name} ${src} $<TARGET_OBJECTS:futils>)
-        target_link_libraries(${name} pastix matrix_driver)
+        target_link_libraries(${name} pastix pastix-matrix-driver)
         target_include_directories(${name} PRIVATE
             ${PASTIX_INCLUDE_DIR_PREC}
         )    

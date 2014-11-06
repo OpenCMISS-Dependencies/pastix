@@ -53,10 +53,10 @@ foreach(prec s d c z)
     endif()
 endforeach()
 
-add_library(matrix_driver STATIC ${OBJS})
-set_target_properties(matrix_driver PROPERTIES OUTPUT_NAME pastix-matrix-driver-${PASTIX_VERSION}) 
-target_link_libraries(matrix_driver PUBLIC pastix)
+add_library(pastix-matrix-driver STATIC ${OBJS})
+set_target_properties(pastix-matrix-driver PROPERTIES OUTPUT_NAME pastix-matrix-driver-${PASTIX_VERSION}) 
+target_link_libraries(pastix-matrix-driver PUBLIC pastix)
 SETINCDIR(${NEUTRAL_PRECISION})
-install(TARGETS matrix_driver EXPORT pastix-config
+install(TARGETS pastix-matrix-driver EXPORT pastix-config
     DESTINATION lib
     INCLUDES DESTINATION ${PASTIX_INCDIR_SUFFIX_PREC})

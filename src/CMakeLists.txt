@@ -16,6 +16,8 @@ macro(IMPORT WHAT)
         fax/src blend/src perf/src/num_recipes kass/src
         $<$<BOOL:${USE_PTSCOTCH}>:
             $<TARGET_PROPERTY:ptscotch,INTERFACE_INCLUDE_DIRECTORIES>>
+        $<$<BOOL:${USE_PTSCOTCH}>:
+            $<TARGET_PROPERTY:scotch,INTERFACE_INCLUDE_DIRECTORIES>>
         $<$<BOOL:${USE_SCOTCH}>:
             $<TARGET_PROPERTY:scotch,INTERFACE_INCLUDE_DIRECTORIES>>
         $<$<BOOL:${USE_METIS}>:
@@ -41,6 +43,8 @@ macro(IMPORT WHAT)
                 kass/src fax/src perf/src
                 $<$<BOOL:${USE_PTSCOTCH}>:
                     $<TARGET_PROPERTY:ptscotch,INTERFACE_INCLUDE_DIRECTORIES>>
+                $<$<BOOL:${USE_PTSCOTCH}>:
+                    $<TARGET_PROPERTY:scotch,INTERFACE_INCLUDE_DIRECTORIES>>
                 $<$<BOOL:${USE_SCOTCH}>:
                     $<TARGET_PROPERTY:scotch,INTERFACE_INCLUDE_DIRECTORIES>>
                 $<$<BOOL:${USE_METIS}>:
@@ -96,7 +100,7 @@ set_target_properties(pastix PROPERTIES OUTPUT_NAME pastix-${PASTIX_VERSION})
 target_compile_definitions(pastix PRIVATE
     ${COMMON_DEFINITIONS} ${TYPE_DEFINITIONS})
 target_link_libraries(pastix PUBLIC
-    $<$<BOOL:${USE_PTSCOTCH}>:ptscotch>
+    $<$<BOOL:${USE_PTSCOTCH}>:ptscotch scotch>
     $<$<BOOL:${USE_SCOTCH}>:scotch>
     $<$<BOOL:${USE_METIS}>:metis>
     blas

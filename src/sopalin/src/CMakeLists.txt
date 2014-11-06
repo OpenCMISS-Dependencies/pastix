@@ -47,7 +47,7 @@ endif()
 if (BUILD_TESTS)
     macro(ADDTEST basename)
         add_executable(${basename} ${basename}.c)
-        target_link_libraries(${basename} pastix matrix_driver)
+        target_link_libraries(${basename} pastix pastix-matrix-driver)
         target_include_directories(${basename} PRIVATE
             ${PASTIX_INCLUDE_DIR_PREC}
             ../../common/src
@@ -57,7 +57,7 @@ if (BUILD_TESTS)
             if(BUILD_PRECISION MATCHES [${prec}])
                 SETINCDIR(${prec})
                 add_executable(${prec}${basename} ${basename}.c)
-                target_link_libraries(${prec}${basename} pastix matrix_driver)
+                target_link_libraries(${prec}${basename} pastix pastix-matrix-driver)
                 target_include_directories(${prec}${basename} PRIVATE
                     ${PASTIX_INCLUDE_DIR_PREC}
                     ../../common/src
@@ -68,7 +68,7 @@ if (BUILD_TESTS)
     endmacro()
     macro(ADDTEST_MPI basename np)
         add_executable(${basename} ${basename}.c)
-        target_link_libraries(${basename} pastix matrix_driver)
+        target_link_libraries(${basename} pastix pastix-matrix-driver)
         target_compile_definitions(${basename} PRIVATE NODESIZE=8)
         target_include_directories(${basename} PRIVATE
             ${PASTIX_INCLUDE_DIR_PREC}
