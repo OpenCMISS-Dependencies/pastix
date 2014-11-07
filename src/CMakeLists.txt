@@ -4,13 +4,20 @@ macro(IMPORT WHAT)
     STRING(TOUPPER "${WHAT}_SRC" VARNAME)
     SET(DIR ${WHAT}/src)
     add_subdirectory(${DIR})
+    # Get variables there
     get_directory_property(REGULAR_FILES
         DIRECTORY ${DIR}
         DEFINITION ${VARNAME})
     APPEND_PREFIX(${DIR} REGULAR_FILES)
-    add_library(${WHAT} OBJECT ${REGULAR_FILES})
+    # Get multiarch-files and set -DWITH_TYPE_PREFIX for them
+    get_directory_property(MULTIARCH_FILES
+        DIRECTORY ${DIR}
+        DEFINITION ${VARNAME}_MA)
+    APPEND_PREFIX(${DIR} MULTIARCH_FILES)
+    
+    add_library(${WHAT} OBJECT ${REGULAR_FILES} ${MULTIARCH_FILES})
     target_compile_definitions(${WHAT} 
-        PRIVATE ${COMMON_DEFINITIONS})
+        PRIVATE ${COMMON_DEFINITIONS} CHOL_SOPALIN)
     target_include_directories(${WHAT} PRIVATE 
         symbol/src common/src order/src sopalin/src perf/src
         fax/src blend/src perf/src/num_recipes kass/src
@@ -21,17 +28,36 @@ macro(IMPORT WHAT)
         $<$<BOOL:${USE_SCOTCH}>:
             $<TARGET_PROPERTY:scotch,INTERFACE_INCLUDE_DIRECTORIES>>
         $<$<BOOL:${USE_METIS}>:
-            $<TARGET_PROPERTY:metis,INTERFACE_INCLUDE_DIRECTORIES>>
+            $<TARGET_PROPERTY:metis4,INTERFACE_INCLUDE_DIRECTORIES>>
     )
     LIST(APPEND ALL_OBJS "$<TARGET_OBJECTS:${WHAT}>")
+    if (${WHAT} STREQUAL sopalin)
+        get_directory_property(MULTIFAC_FILES
+            DIRECTORY ${DIR}
+            DEFINITION SRC_FAC)
+        APPEND_PREFIX(${DIR} MULTIFAC_FILES)
+        # Special case for different factorization codes (per precision)
+        # GE: SOPALIN_LU
+        # SY: no extra definition, using NOEXTRADEF_SY to have a loop step
+        # HE: HERMITIAN
+        foreach(extradef SOPALIN_LU NOEXTRADEF_SY HERMITIAN)
+            SET(lib sopalin_${extradef})
+            add_library(${lib} OBJECT ${MULTIFAC_FILES})
+            target_compile_definitions(${lib} PRIVATE
+                ${extradef} ${COMMON_DEFINITIONS})
+            target_include_directories(${lib} PRIVATE 
+                order/src common/src blend/src symbol/src
+                kass/src fax/src perf/src
+            )
+            # Make sure the type specific headers are used
+            #target_include_directories(${lib} BEFORE PRIVATE ${PASTIX_INCLUDE_DIR_PREC})
+            LIST(APPEND ALL_OBJS "$<TARGET_OBJECTS:${lib}>") 
+        endforeach()
+    endif()
     
-    # Get multiarch-files and set -DWITH_TYPE_PREFIX for them
-    get_directory_property(MULTIARCH_FILES
-        DIRECTORY ${DIR}
-        DEFINITION ${VARNAME}_MA)
-    APPEND_PREFIX(${DIR} MULTIARCH_FILES)
     foreach(prec s d c z)
         SETTYPEDEFS(${prec})
+        SETINCDIR(${prec})
         if(NOT "${MULTIARCH_FILES}" STREQUAL "" 
            AND BUILD_PRECISION MATCHES [${prec}])
             SET(lib ${prec}${WHAT})
@@ -48,11 +74,14 @@ macro(IMPORT WHAT)
                 $<$<BOOL:${USE_SCOTCH}>:
                     $<TARGET_PROPERTY:scotch,INTERFACE_INCLUDE_DIRECTORIES>>
                 $<$<BOOL:${USE_METIS}>:
-                    $<TARGET_PROPERTY:metis,INTERFACE_INCLUDE_DIRECTORIES>>
+                    $<TARGET_PROPERTY:metis4,INTERFACE_INCLUDE_DIRECTORIES>>
             )
-            LIST(APPEND ALL_OBJS "$<TARGET_OBJECTS:${lib}>")                
+            # Make sure the type specific headers are used
+            #target_include_directories(${lib} BEFORE PRIVATE ${PASTIX_INCLUDE_DIR_PREC})
+            LIST(APPEND ALL_OBJS "$<TARGET_OBJECTS:${lib}>")
         endif()
-        if (${WHAT} STREQUAL sopalin)
+        if (${WHAT} STREQUAL sopalin
+            AND BUILD_PRECISION MATCHES [${prec}])
             get_directory_property(MULTIFAC_FILES
                 DIRECTORY ${DIR}
                 DEFINITION SRC_FAC)
@@ -70,6 +99,8 @@ macro(IMPORT WHAT)
                     order/src common/src blend/src symbol/src
                     kass/src fax/src perf/src
                 )
+                # Make sure the type specific headers are used
+                #target_include_directories(${lib} BEFORE PRIVATE ${PASTIX_INCLUDE_DIR_PREC})
                 LIST(APPEND ALL_OBJS "$<TARGET_OBJECTS:${lib}>") 
             endforeach()
         endif()
@@ -94,6 +125,8 @@ IMPORT(fax)
 IMPORT(kass)
 IMPORT(sparse-matrix)
 #SET(WRAPPER wrapper/petsc/src_mat_impl_aij_mpi_pastix_pastix.c)
+#add_custom_target(${prec}testsymbolsxx COMMAND nm $<TARGET_FILE:${lib}> | grep pastix_checkMatrix)
+#add_dependencies(${prec}testsymbolsxx ${lib})
     
 add_library(pastix STATIC ${ALL_OBJS})
 set_target_properties(pastix PROPERTIES OUTPUT_NAME pastix-${PASTIX_VERSION})
@@ -102,7 +135,7 @@ target_compile_definitions(pastix PRIVATE
 target_link_libraries(pastix PUBLIC
     $<$<BOOL:${USE_PTSCOTCH}>:ptscotch scotch>
     $<$<BOOL:${USE_SCOTCH}>:scotch>
-    $<$<BOOL:${USE_METIS}>:metis>
+    $<$<BOOL:${USE_METIS}>:metis4>
     blas
     ${CMAKE_Fortran_IMPLICIT_LIBRARIES})
 target_include_directories(pastix 

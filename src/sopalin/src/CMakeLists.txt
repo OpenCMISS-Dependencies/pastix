@@ -1,7 +1,6 @@
 SET(SOPALIN_SRC bordi.c
 	 sopalin_thread.c
 	 compute_context_nbr.c
-	 coefinit.c
 )
 SET(SRC_FAC
     sopalin3d.c		
@@ -10,6 +9,7 @@ SET(SRC_FAC
 	raff_functions.c	
 	starpu_updo.c)
 SET(SOPALIN_SRC_MA
+    coefinit.c
  	csc_intern_build.c	
 	csc_intern_compute.c	
 	csc_intern_io.c		
