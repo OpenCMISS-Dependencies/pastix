@@ -1,5 +1,6 @@
 add_subdirectory(utils/src)
 
+SET(METISNAME metis)
 macro(IMPORT WHAT)
     STRING(TOUPPER "${WHAT}_SRC" VARNAME)
     SET(DIR ${WHAT}/src)
@@ -28,7 +29,7 @@ macro(IMPORT WHAT)
         $<$<BOOL:${USE_SCOTCH}>:
             $<TARGET_PROPERTY:scotch,INTERFACE_INCLUDE_DIRECTORIES>>
         $<$<BOOL:${USE_METIS}>:
-            $<TARGET_PROPERTY:metis4,INTERFACE_INCLUDE_DIRECTORIES>>
+            $<TARGET_PROPERTY:${METISNAME},INTERFACE_INCLUDE_DIRECTORIES>>
     )
     LIST(APPEND ALL_OBJS "$<TARGET_OBJECTS:${WHAT}>")
     if (${WHAT} STREQUAL sopalin)
@@ -74,7 +75,7 @@ macro(IMPORT WHAT)
                 $<$<BOOL:${USE_SCOTCH}>:
                     $<TARGET_PROPERTY:scotch,INTERFACE_INCLUDE_DIRECTORIES>>
                 $<$<BOOL:${USE_METIS}>:
-                    $<TARGET_PROPERTY:metis4,INTERFACE_INCLUDE_DIRECTORIES>>
+                    $<TARGET_PROPERTY:${METISNAME},INTERFACE_INCLUDE_DIRECTORIES>>
             )
             # Make sure the type specific headers are used
             #target_include_directories(${lib} BEFORE PRIVATE ${PASTIX_INCLUDE_DIR_PREC})
@@ -135,7 +136,7 @@ target_compile_definitions(pastix PRIVATE
 target_link_libraries(pastix PUBLIC
     $<$<BOOL:${USE_PTSCOTCH}>:ptscotch scotch>
     $<$<BOOL:${USE_SCOTCH}>:scotch>
-    $<$<BOOL:${USE_METIS}>:metis4>
+    $<$<BOOL:${USE_METIS}>:${METISNAME}>
     blas
     ${CMAKE_Fortran_IMPLICIT_LIBRARIES})
 target_include_directories(pastix 

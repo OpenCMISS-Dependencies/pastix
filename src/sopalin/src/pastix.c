@@ -403,7 +403,7 @@ void pastix_initParam(PASTIX_INT    *iparm,
   iparm[IPARM_MURGE_MAY_REFINE]      = API_NO;
   iparm[IPARM_TRANSPOSE_SOLVE]       = API_NO;
   /* Mode pour thread_comm :
-     0 -> inutilisé
+     0 -> inutilisï¿½
      1 -> 1 seul
      2 -> iparm[IPARM_NB_THREAD_COMM]
      3 -> Nbproc(iparm[IPARM_THREAD_NBR]))
@@ -922,7 +922,7 @@ void pastix_task_init(pastix_data_t **pastix_data,
   (*pastix_data)->iscalecoltab = NULL;
 
   (*pastix_data)->cscInternFilled = API_NO;
-  /* Récupération du nombre de proc */
+  /* Rï¿½cupï¿½ration du nombre de proc */
   MPI_Comm_size(pastix_comm, &((*pastix_data)->procnbr));
   MPI_Comm_rank(pastix_comm, &((*pastix_data)->procnum));
   MPI_Comm_size((*pastix_data)->inter_node_comm, &((*pastix_data)->inter_node_procnbr));
@@ -974,7 +974,7 @@ void pastix_task_init(pastix_data_t **pastix_data,
   print memory usage during pastix.
 
   Parameters:
-  iparm       - integer paréameters.
+  iparm       - integer parï¿½ameters.
   pastix_comm - PaStiX MPI communicator
 */
 void pastix_print_memory_usage(PASTIX_INT      *iparm,
@@ -1053,7 +1053,7 @@ void pastix_welcome_print(pastix_data_t *pastix_data,
       fprintf(stdout, OUT_ENTETE_LINE2);
       fprintf(stdout, OUT_ENTETE_LINE3);
 
-      /* TODO : en distribué afficher pour chaque proc... */
+      /* TODO : en distribuï¿½ afficher pour chaque proc... */
       if ( gN != 0)
         {
           fprintf(stdout, OUT_MATRIX_SIZE, (long)gN, (long)gN);
@@ -1387,7 +1387,7 @@ int pastix_task_scotch(pastix_data_t **pastix_data,
             break;
           }
 
-        /* On nettoie grafmesh et col2/row2 si ils sont déja alloués */
+        /* On nettoie grafmesh et col2/row2 si ils sont dï¿½ja allouï¿½s */
         if ((*pastix_data)->malgrf == 1)
           {
             SCOTCH_graphExit(grafmesh);
@@ -1634,18 +1634,22 @@ int pastix_task_scotch(pastix_data_t **pastix_data,
           print_onempi("%s", "calling metis...\n");
 
         /* call METIS and fill ordemesh (provide a partition) */
-        opt[OPTION_PTYPE  ] = (iparm[IPARM_DEFAULT_ORDERING]==API_YES)?0:1;
+        opt[METIS_OPTION_PTYPE  ] = (iparm[IPARM_DEFAULT_ORDERING]==API_YES)?0:1;
 
         /* TODO: tester sans cette ligne... 0 if default */
-        opt[OPTION_PTYPE  ] = 0;
+        opt[METIS_OPTION_PTYPE  ] = 0;
 
-        opt[OPTION_CTYPE  ] = iparm[IPARM_ORDERING_SWITCH_LEVEL];
-        opt[OPTION_ITYPE  ] = iparm[IPARM_ORDERING_CMIN];
-        opt[OPTION_RTYPE  ] = iparm[IPARM_ORDERING_CMAX];
-        opt[OPTION_DBGLVL ] = iparm[IPARM_ORDERING_FRAT];
-        opt[OPTION_OFLAGS ] = iparm[IPARM_STATIC_PIVOTING];
-        opt[OPTION_PFACTOR] = iparm[IPARM_METIS_PFACTOR];
-        opt[OPTION_NSEPS  ] = iparm[IPARM_NNZEROS];
+        opt[METIS_OPTION_CTYPE  ] = iparm[IPARM_ORDERING_SWITCH_LEVEL];
+        opt[METIS_OPTION_IPTYPE  ] = iparm[IPARM_ORDERING_CMIN];
+        opt[METIS_OPTION_RTYPE  ] = iparm[IPARM_ORDERING_CMAX];
+        opt[METIS_OPTION_DBGLVL ] = iparm[IPARM_ORDERING_FRAT];
+        /*
+         * NOTE Daniel Wirtz ABI Auckland: Disabled option so that Pastix would work with METIS 5.1.
+         * As METIS will use defaults this doesnt break anything but may affect performance.
+         */
+        //opt[METIS_OPTION_OFLAGS ] = iparm[IPARM_STATIC_PIVOTING];
+        opt[METIS_OPTION_PFACTOR] = iparm[IPARM_METIS_PFACTOR];
+        opt[METIS_OPTION_NSEPS  ] = iparm[IPARM_NNZEROS];
 
         /*METIS_NodeND(&n,verttab,edgetab,&baseval,opt,
           ordemesh->permtab,ordemesh->peritab);*/
@@ -1961,7 +1965,7 @@ int dpastix_task_scotch(pastix_data_t ** pastix_data,
   if (iparm[IPARM_VERBOSE] > API_VERBOSE_NO)
     print_onempi("%s", OUT_STEP_ORDER);
 
-  /* On nettoie grafmesh et col2/row2 si ils sont déja alloués */
+  /* On nettoie grafmesh et col2/row2 si ils sont dï¿½ja allouï¿½s */
 #    ifdef WITH_SCOTCH
   if ((*pastix_data)->malgrf == 1)
     {
@@ -2033,7 +2037,7 @@ int dpastix_task_scotch(pastix_data_t ** pastix_data,
           EXIT(MOD_SOPALIN,INTERNAL_ERR);
         }
 
-      /* TODO : mettre des strategies par défaut */
+      /* TODO : mettre des strategies par dï¿½faut */
       if (iparm[IPARM_DEFAULT_ORDERING] == API_YES)
         {
           if (iparm[IPARM_INCOMPLETE] == API_NO)
@@ -3339,7 +3343,7 @@ int pastix_fillin_csc( pastix_data_t *pastix_data,
 #  endif /* DISTRIBUTED */
       pastix_data->malcsc = 1;
 
-      /* Libération de la csc interne temporaire */
+      /* Libï¿½ration de la csc interne temporaire */
       if (malcsc == API_YES)
         {
           /* l2g and rhs are not freed here beacause
@@ -4659,7 +4663,7 @@ void pastix_unscale(pastix_data_t *pastix_data, PASTIX_INT sym) {
  *  b           - Right hand side vector(s).
  *  rhs         - Number of right hand side vector(s).
  *  iparm       - Integer parameters given to pastix.
- *  dparm       - Double parameters given to pâstix.
+ *  dparm       - Double parameters given to pï¿½stix.
  *
  *  About: Example
  *
@@ -4762,7 +4766,7 @@ void pastix(pastix_data_t **pastix_data,
       iparm[IPARM_OOC_ID] = -1;
 
       /* Allocation de la structure pastix_data qd on rentre dans
-         pastix pour la première fois */
+         pastix pour la premiï¿½re fois */
       pastix_task_init(pastix_data, pastix_comm, iparm, dparm);
       if ((*pastix_data)->intra_node_procnum == 0) {
         /* Affichage des options */
@@ -5172,7 +5176,7 @@ void pastix(pastix_data_t **pastix_data,
     b           - Right hand side vector(s).
     rhs         - Number of right hand side vector(s).
     iparm       - Integer parameters given to pastix.
-    dparm       - Double parameters given to pâstix.
+    dparm       - Double parameters given to pï¿½stix.
 */
 #ifndef dpastix
 #  error "REDEFINIR dpastix dans redefine_functions.h"
@@ -5215,7 +5219,7 @@ void dpastix(pastix_data_t **pastix_data,
     }
 
   /* Si pastix_data est nul, c'est qu'on rentre dans
-     la fonction pour la première fois */
+     la fonction pour la premiï¿½re fois */
   if (*pastix_data == NULL)
     {
       iparm[IPARM_OOC_ID]         = -1;
@@ -5544,7 +5548,7 @@ void dpastix(pastix_data_t **pastix_data,
   bindtab[threadnum] = cpu to set thread threadnum.
 
   Parameters:
-  pastix_data - Structure de donnée pour l'utilisation step by step
+  pastix_data - Structure de donnï¿½e pour l'utilisation step by step
   thrdnbr     - Nombre de threads / Taille du tableau
   bindtab     - Tableau de correspondance entre chaque thread et coeur de la machine
 */
@@ -5972,7 +5976,7 @@ PASTIX_INT pastix_checkMatrix_int(MPI_Comm pastix_comm,
 #  endif /* MC64 */
 #endif /* SCALING */
 
-  /* Symmetrisation du graphe des matrices non-symmétriques */
+  /* Symmetrisation du graphe des matrices non-symmï¿½triques */
   if (flagsym == API_SYM_NO)
     {
       if (verb > API_VERBOSE_NOT)
@@ -5980,7 +5984,7 @@ PASTIX_INT pastix_checkMatrix_int(MPI_Comm pastix_comm,
 
       old = (*colptr)[n]-1;
 
-      /* Version distribuée */
+      /* Version distribuï¿½e */
       if ((loc2glob != NULL))
         {
           /* Preserve sorting */
@@ -6010,7 +6014,7 @@ PASTIX_INT pastix_checkMatrix_int(MPI_Comm pastix_comm,
               RETURN_ERROR(MATRIX_ERR);
             }
         }
-      /* Version non distribuée */
+      /* Version non distribuï¿½e */
       else
         {
           /* Preserve sorting */

@@ -107,7 +107,9 @@ elseif (USE_SCOTCH)
 endif()
 
 if (USE_METIS)
-    find_package(METIS 4 CONFIG REQUIRED)
+    # Fixed up the pastix.c file to have it compile against Metis 5.
+    # Just a couple of option renames had to be done, see pastix.c:1650
+    find_package(METIS 5 CONFIG REQUIRED)
     add_definitions(-DMETIS)
     message(STATUS "Using Metis ${METIS_VERSION} orderings")
 endif()
