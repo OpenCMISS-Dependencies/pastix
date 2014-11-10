@@ -20,7 +20,7 @@ option(BUILD_TESTS "${PROJECT_NAME} - Build tests" ON)
 set(BUILD_PRECISION sdcz CACHE STRING "${PROJECT_NAME} - Build precisions (sdcz)")
 set(INT_TYPE int32 CACHE STRING "${PROJECT_NAME} - Integer version (int32, long, int64)")
 option(USE_THREADS "Use PTHREAD library" ON)
-option(USE_METIS "Use METIS 4 orderings" ON)
+option(USE_METIS "Use METIS orderings" ON)
 option(USE_PTSCOTCH "Use PT-Scotch orderings (will include Scotch)" ON)
 option(USE_SCOTCH "Use Scotch orderings" OFF)
 # Not yet implemented to be ON
