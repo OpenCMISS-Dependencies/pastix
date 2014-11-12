@@ -122,6 +122,13 @@ foreach(prec s d c z)
             SET(NEUTRAL_PRECISION ${prec})
         endif()
         message(STATUS "Building pastix precision '${prec}'")
+        
+        # Check which header files need to be generated
+        SETINCDIR(${prec})
+        if(NOT EXISTS ${PASTIX_INCLUDE_DIR_PREC}/pastix.h)
+            SET(NEED_HEADERS_${prec} YES)
+            message(STATUS "Generating headers for precision '${prec}'")
+        endif()
     endif()
 endforeach()
 if(NOT NEUTRAL_PRECISION)

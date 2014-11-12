@@ -40,7 +40,9 @@ foreach(prec s d c z)
     if(BUILD_PRECISION MATCHES [${prec}])
         SETINCDIR(${prec})
         add_library(${prec}matrix_driver OBJECT ${MD_SRC} ${MD_SRC_MA})
-        add_dependencies(${prec}matrix_driver ${prec}headers)
+        if (NEED_HEADERS_${prec})
+            add_dependencies(${prec}matrix_driver ${prec}headers)
+        endif()
         target_include_directories(${prec}matrix_driver PRIVATE
             ${PASTIX_INCLUDE_DIR_PREC}
             ${MPI_C_INCLUDE_PATH} ${MPI_Fortran_INCLUDE_PATH})
