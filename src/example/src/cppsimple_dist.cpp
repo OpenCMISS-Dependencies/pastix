@@ -10,12 +10,12 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include <stdio.h>
 #ifndef FORCE_NOMPI
 #include <mpi.h>
 #else
 #define MPI_COMM_WORLD 0
 #endif
+#include <stdio.h>
 #include <complex>
 #include <iostream>
 /* to access functions from the libpastix, respect this order */
