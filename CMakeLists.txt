@@ -30,7 +30,7 @@ SET(USE_MAGMABLAS OFF) # BLAS for GPU?!
 
 include(CMakePackageConfigHelpers)
 
-find_package(BLAS ${BLAS_VERSION} CONFIG REQUIRED)
+find_package(BLAS ${BLAS_VERSION} REQUIRED)
 find_package(MPI REQUIRED)
 
 if (BUILD_TESTS)
@@ -98,11 +98,11 @@ if (NOT USE_CUDA)
 endif()
 
 if (USE_PTSCOTCH)
-    find_package(PTSCOTCH ${PTSCOTCH_VERSION} CONFIG REQUIRED)
+    find_package(PTSCOTCH ${PTSCOTCH_VERSION} REQUIRED)
     add_definitions(-DWITH_SCOTCH -DDISTRIBUTED)
     message(STATUS "Using PT-Scotch ${PTSCOTCH_VERSION} orderings")
 elseif (USE_SCOTCH)
-    find_package(SCOTCH ${SCOTCH_VERSION} CONFIG REQUIRED)
+    find_package(SCOTCH ${SCOTCH_VERSION} REQUIRED)
     add_definitions(-DWITH_SCOTCH)
     message(STATUS "Using Scotch ${SCOTCH_VERSION} orderings")
 endif()
@@ -110,7 +110,7 @@ endif()
 if (USE_METIS)
     # Fixed up the pastix.c file to have it compile against Metis 5.
     # Just a couple of option renames had to be done, see pastix.c:1650
-    find_package(METIS ${METIS_VERSION} CONFIG REQUIRED)
+    find_package(METIS ${METIS_VERSION} REQUIRED)
     add_definitions(-DMETIS)
     message(STATUS "Using Metis ${METIS_VERSION} orderings")
 endif()
