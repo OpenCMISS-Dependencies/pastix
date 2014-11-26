@@ -55,7 +55,7 @@ foreach(prec s d c z)
     endif()
 endforeach()
 
-add_library(pastix-matrix-driver STATIC ${OBJS})
+add_library(pastix-matrix-driver ${OBJS})
 set_target_properties(pastix-matrix-driver PROPERTIES OUTPUT_NAME pastix-matrix-driver-${PASTIX_VERSION}) 
 target_link_libraries(pastix-matrix-driver PUBLIC pastix)
 SETINCDIR(${NEUTRAL_PRECISION})

@@ -129,7 +129,7 @@ IMPORT(sparse-matrix)
 #add_custom_target(${prec}testsymbolsxx COMMAND nm $<TARGET_FILE:${lib}> | grep pastix_checkMatrix)
 #add_dependencies(${prec}testsymbolsxx ${lib})
     
-add_library(pastix STATIC ${ALL_OBJS})
+add_library(pastix ${ALL_OBJS})
 set_target_properties(pastix PROPERTIES OUTPUT_NAME pastix-${PASTIX_VERSION})
 target_compile_definitions(pastix PRIVATE
     ${COMMON_DEFINITIONS} ${TYPE_DEFINITIONS})
