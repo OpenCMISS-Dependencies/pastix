@@ -23,6 +23,8 @@ option(USE_THREADS "Use PTHREAD library" ON)
 option(USE_METIS "Use METIS orderings" ON)
 option(USE_PTSCOTCH "Use PT-Scotch orderings (will include Scotch)" ON)
 option(USE_SCOTCH "Use Scotch orderings" OFF)
+option(WITH_OPENMP "${PROJECT_NAME} - Use OpenMP" ON)
+
 # Not yet implemented to be ON
 SET(USE_CUDA OFF)
 SET(USE_STARPU OFF)
@@ -32,6 +34,18 @@ include(CMakePackageConfigHelpers)
 
 find_package(BLAS ${BLAS_VERSION} REQUIRED)
 find_package(MPI REQUIRED)
+
+if (WITH_OPENMP)
+  find_package(OpenMP)
+  if (OPENMP_FOUND)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${OpenMP_Fortran_FLAGS}")
+  else()
+    SET(WITH_OPENMP FALSE)
+    message(WARNING "OpenMP requested but not found. Skipping.")
+  endif()
+endif()
 
 if (BUILD_TESTS)
     enable_testing()
