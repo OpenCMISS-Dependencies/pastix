@@ -133,6 +133,9 @@ add_library(pastix ${ALL_OBJS})
 set_target_properties(pastix PROPERTIES OUTPUT_NAME pastix-${PASTIX_VERSION})
 target_compile_definitions(pastix PRIVATE
     ${COMMON_DEFINITIONS} ${TYPE_DEFINITIONS})
+if (USE_THREADS)
+    target_link_libraries(pastix PUBLIC ${CMAKE_THREAD_LIBS_INIT})
+endif()
 target_link_libraries(pastix PUBLIC
     $<$<BOOL:${USE_PTSCOTCH}>:ptscotch scotch>
     $<$<BOOL:${USE_SCOTCH}>:scotch>

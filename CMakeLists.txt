@@ -46,6 +46,13 @@ if (WITH_OPENMP)
     message(WARNING "OpenMP requested but not found. Skipping.")
   endif()
 endif()
+if (USE_THREADS)
+    find_package(Threads QUIET)
+    if (NOT Threads_FOUND)
+        message(WARNING "Threading was requested (USE_THREADS=${USE_THREADS}), but package could not be found. Disabling.")
+        SET(USE_THREADS NO)
+    endif()
+endif()
 
 if (BUILD_TESTS)
     enable_testing()
@@ -58,6 +65,16 @@ set(CMAKE_Fortran_COMPILER ${MPI_Fortran_COMPILER})
 set(CMAKE_CXX_COMPILER ${MPI_CXX_COMPILER})
 #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 #set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3")
+# Detect host architecture
+# Yet undetermined:
+# Compaq: alpha_compaq_osf1
+# SUN: sun
+# AIX: power_ibm_aix
+if (APPLE)
+    SET(HOSTARCH i686_mac)
+elseif(UNIX)
+    SET(HOSTARCH i686_pc_linux)
+endif()
 SET(COMMON_DEFINITIONS 
     VERSION=opencmiss
     X_ARCH${HOSTARCH}
