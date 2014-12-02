@@ -51,7 +51,8 @@ if (BUILD_TESTS)
         target_include_directories(${basename} PRIVATE
             ${PASTIX_INCLUDE_DIR_PREC}
             ../../common/src
-        ) 
+        )
+        target_compile_definitions(${basename} PRIVATE ${COMMON_DEFINITIONS})
         add_test(${basename} ${basename} ${args})
         foreach(prec s d c z)
             if(BUILD_PRECISION MATCHES [${prec}])
@@ -62,6 +63,7 @@ if (BUILD_TESTS)
                     ${PASTIX_INCLUDE_DIR_PREC}
                     ../../common/src
                 )
+                target_compile_definitions(${prec}${basename} PRIVATE ${COMMON_DEFINITIONS})
                 add_test(${prec}${basename} ${prec}${basename} ${args}) 
             endif()
         endforeach()
@@ -69,7 +71,7 @@ if (BUILD_TESTS)
     macro(ADDTEST_MPI basename np)
         add_executable(${basename} ${basename}.c)
         target_link_libraries(${basename} pastix pastix-matrix-driver)
-        target_compile_definitions(${basename} PRIVATE NODESIZE=8)
+        target_compile_definitions(${basename} PRIVATE NODESIZE=8 ${COMMON_DEFINITIONS})
         target_include_directories(${basename} PRIVATE
             ${PASTIX_INCLUDE_DIR_PREC}
             ${MPI_C_INCLUDE_PATH}
