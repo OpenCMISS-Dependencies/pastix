@@ -1,3 +1,0 @@
-[submodule "src/murge"]
-	path = src/murge
-	url = git://scm.gforge.inria.fr/murge/murge.git
