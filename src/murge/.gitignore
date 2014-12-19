@@ -1,0 +1,15 @@
+Makefile.inc
+examples/bin
+examples/obj
+scripts/doc
+scripts/pdoc
+
+slides/*/*.aux
+slides/*/*.log
+slides/*/*.nav
+slides/*/*.out
+slides/*/*.pdf
+slides/*/*.snm
+slides/*/*.toc
+slides/*/*.vrb
+*~

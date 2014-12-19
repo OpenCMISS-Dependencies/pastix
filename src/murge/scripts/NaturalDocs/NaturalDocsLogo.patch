@@ -1,0 +1,127 @@
+--- Modules/NaturalDocs/Builder/HTMLBase.pm	2008-05-06 02:07:48.000000000 +0200
++++ Modules/NaturalDocs/Builder/HTMLBase.pm	2008-06-11 15:42:30.000000000 +0200
+@@ -682,6 +682,7 @@
+         my $titleOutput;
+ 
+         my $menuTitle = NaturalDocs::Menu->Title();
++        my $logo = NaturalDocs::Menu->Logo();
+         if (defined $menuTitle)
+             {
+             if (!$menuNumbersAndLengthsDone)
+@@ -689,10 +690,18 @@
+ 
+             $menuRootLength += MENU_TITLE_LENGTH;
+ 
++            if (defined $logo)
++                {
++                $titleOutput .=
++                    '<div class=MTitle><img class=MLogo src="'
++                    . $self->StringToHTML($logo) . '" alt="' . $self->StringToHTML($menuTitle) . '" >';
++                }
++            else
++                {
+             $titleOutput .=
+             '<div class=MTitle>'
+                 . $self->StringToHTML($menuTitle);
+-
++                }
+             my $menuSubTitle = NaturalDocs::Menu->SubTitle();
+             if (defined $menuSubTitle)
+                 {
+--- Modules/NaturalDocs/Menu.pm	2008-03-18 17:43:22.000000000 +0100
++++ Modules/NaturalDocs/Menu.pm	2008-06-11 15:24:05.000000000 +0200
+@@ -83,6 +83,7 @@
+ #   The title of the menu.
+ #
+ my $title;
++my $logo;
+ 
+ #
+ #   String: subTitle
+@@ -531,6 +532,8 @@
+ sub Title
+     {  return $title;  };
+ 
++sub Logo
++    {  return $logo;  };
+ #
+ #   Function: SubTitle
+ #
+@@ -782,6 +785,15 @@
+                 }
+ 
+ 
++            elsif ($keyword eq 'logo')
++                {
++                if (!defined $logo)
++                    {  print $logo."\n"; $logo = $self->RestoreAmpChars($value); print $logo."\n"}
++                else
++                    {  NaturalDocs::ConfigFile->AddError('Logo can only be defined once.');  };
++                }
++
++
+             elsif ($keyword eq 'subtitle')
+                 {
+                 if (defined $title)
+@@ -987,6 +999,10 @@
+         {
+         print MENUFILEHANDLE 'Title: ' . $self->ConvertAmpChars($title) . "\n";
+ 
++        if (defined $logo)
++            {
++            print MENUFILEHANDLE 'Logo: ' . $self->ConvertAmpChars($logo) . "\n";
++            }
+         if (defined $subTitle)
+             {
+             print MENUFILEHANDLE 'SubTitle: ' . $self->ConvertAmpChars($subTitle) . "\n";
+--- Styles/Default.css	2008-05-06 02:06:00.000000000 +0200
++++ Styles/Default.css	2008-06-11 16:38:22.000000000 +0200
+@@ -108,6 +108,10 @@
+         border-bottom: 1px dotted #000000;
+         margin-bottom: 15px }
+ 
++    .MLogo { 
++        width: 95%;
++    }
++
+     .MSubTitle {
+         font-size: 9pt; font-weight: normal; font-variant: normal;
+         margin-top: 1ex; margin-bottom: 5px }
+@@ -316,7 +320,7 @@
+ 
+     #MainTopic .CTitle {
+         font-size: 20pt;
+-        color: #FFFFFF; background-color: #7070C0;
++        color: #FFFFFF; background-color: #1E2D4E;
+         padding: 10px 15px 10px 15px;
+         border-width: 0 0 3px 0; border-color: #000000;
+         margin-left: 0; margin-right: 0 }
+
+--- Styles/Roman.css	2008-05-06 02:05:58.000000000 +0200
++++ Styles/Roman.css	2008-06-11 15:44:51.000000000 +0200
+@@ -107,6 +107,10 @@
+         border-bottom: 1px dotted #000000;
+         margin-bottom: 15px }
+ 
++    .MLogo { 
++        width: 95%;
++    }
++
+     .MSubTitle {
+         font-size: 10pt; font-weight: normal; font-variant: normal;
+         margin-top: 1ex; margin-bottom: 5px }
+
+--- Styles/Small.css	2008-05-06 02:06:08.000000000 +0200
++++ Styles/Small.css	2008-06-11 15:44:45.000000000 +0200
+@@ -107,6 +107,10 @@
+         border-bottom: 1px dotted #000000;
+         margin-bottom: 15px }
+ 
++    .MLogo { 
++        width: 95%;
++    }
++
+     .MSubTitle {
+         font-size: 9pt; font-weight: normal; font-variant: normal;
+         margin-top: 1ex; margin-bottom: 5px }
+

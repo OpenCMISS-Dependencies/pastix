@@ -1,0 +1,21 @@
+EXE    = 
+OBJ    = .o
+SRCDIR = src
+OBJDIR = obj
+BINDIR = bin
+
+$(OBJDIR)/%$(OBJ) : $(SRCDIR)/%.c $(OBJDIR)
+	$(CC) $(CFLAGS)  -c $< -o $@
+
+$(BINDIR)/%$(EXE) : $(OBJDIR)/%$(OBJ) $(BINDIR)
+	$(CC) $(CFLAGS)  $< -o $@ $(LDSOLVER) $(LDFLAGS) 
+
+bin	:
+	mkdir bin
+
+obj	:
+	mkdir obj
+
+clean	: 
+	rm -rf bin
+	rm -rf obj		
