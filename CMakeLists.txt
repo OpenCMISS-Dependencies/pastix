@@ -64,9 +64,15 @@ endif()
 
 # it seems that sparsekit.f90 is not used
 #set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffree-form -x f95-cpp-input")
-set(CMAKE_C_COMPILER ${MPI_C_COMPILER})
-set(CMAKE_Fortran_COMPILER ${MPI_Fortran_COMPILER})
-set(CMAKE_CXX_COMPILER ${MPI_CXX_COMPILER})
+if (MPI_C_COMPILER)
+    set(CMAKE_C_COMPILER ${MPI_C_COMPILER})
+endif()
+if (MPI_CXX_COMPILER)
+    set(CMAKE_CXX_COMPILER ${MPI_CXX_COMPILER})
+endif()
+if (MPI_Fortran_COMPILER)
+    set(CMAKE_Fortran_COMPILER ${MPI_Fortran_COMPILER})
+endif()
 #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 #set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3")
 # Detect host architecture
