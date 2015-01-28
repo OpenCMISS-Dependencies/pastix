@@ -24,6 +24,10 @@ option(USE_METIS "Use METIS orderings" ON)
 option(USE_PTSCOTCH "Use PT-Scotch orderings (will include Scotch)" ON)
 option(USE_SCOTCH "Use Scotch orderings" OFF)
 option(WITH_OPENMP "${PROJECT_NAME} - Use OpenMP" ON)
+if (BUILD_SHARED_LIBS)
+    # This will cause all the OBJECT targets to have -fPIC as well.
+    SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
+endif()
 
 # Not yet implemented to be ON
 SET(USE_CUDA OFF)

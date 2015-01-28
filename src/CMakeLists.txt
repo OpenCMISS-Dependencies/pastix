@@ -119,15 +119,11 @@ SET(ALL_OBJS )
 IMPORT(common)
 IMPORT(symbol)
 IMPORT(order)
-IMPORT(perf)
 IMPORT(sopalin)
 IMPORT(blend)
 IMPORT(fax)
 IMPORT(kass)
 IMPORT(sparse-matrix)
-#SET(WRAPPER wrapper/petsc/src_mat_impl_aij_mpi_pastix_pastix.c)
-#add_custom_target(${prec}testsymbolsxx COMMAND nm $<TARGET_FILE:${lib}> | grep pastix_checkMatrix)
-#add_dependencies(${prec}testsymbolsxx ${lib})
     
 add_library(pastix ${ALL_OBJS})
 set_target_properties(pastix PROPERTIES OUTPUT_NAME pastix-${PASTIX_VERSION})
@@ -137,7 +133,7 @@ if (USE_THREADS)
     target_link_libraries(pastix PUBLIC ${CMAKE_THREAD_LIBS_INIT})
 endif()
 target_link_libraries(pastix PUBLIC
-    $<$<BOOL:${USE_PTSCOTCH}>:ptscotch scotch>
+    $<$<BOOL:${USE_PTSCOTCH}>:ptscotch>
     $<$<BOOL:${USE_SCOTCH}>:scotch>
     $<$<BOOL:${USE_METIS}>:${METISNAME}>
     blas
@@ -153,6 +149,8 @@ SETINCDIR(${NEUTRAL_PRECISION})
 install(TARGETS pastix EXPORT pastix-config
     DESTINATION lib
     INCLUDES DESTINATION ${PASTIX_INCDIR_SUFFIX_PREC})
+
+add_subdirectory(perf/src)
 add_subdirectory(matrix_drivers/src)
 
 if (BUILD_TESTS)

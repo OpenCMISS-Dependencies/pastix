@@ -35,11 +35,12 @@ SET(MD_SRC_MA
     laplacian.c
 )
 
-SET(OBJS )
+SET(OBJS $<TARGET_OBJECTS:matrix_driver_common>)
 foreach(prec s d c z)
     if(BUILD_PRECISION MATCHES [${prec}])
         SETINCDIR(${prec})
-        add_library(${prec}matrix_driver OBJECT ${MD_SRC} ${MD_SRC_MA})
+        add_library(${prec}matrix_driver ${MD_SRC} ${MD_SRC_MA})
+        #add_library(${prec}matrix_driver OBJECT ${MD_SRC_MA})
         if (NEED_HEADERS_${prec})
             add_dependencies(${prec}matrix_driver ${prec}headers)
         endif()
@@ -49,16 +50,17 @@ foreach(prec s d c z)
         SETTYPEDEFS(${prec})
         target_compile_definitions(${prec}matrix_driver
             PRIVATE ${COMMON_DEFINITIONS} ${TYPEDEFS})
-        LIST(APPEND OBJS "$<TARGET_OBJECTS:${prec}matrix_driver>")
+           
+        #LIST(APPEND OBJS "$<TARGET_OBJECTS:${prec}matrix_driver>")
         configure_file(read_matrix.h ${PASTIX_INCLUDE_DIR_PREC} COPYONLY)
         configure_file(get_options.h ${PASTIX_INCLUDE_DIR_PREC} COPYONLY)
+        
+        set_target_properties(${prec}matrix_driver PROPERTIES OUTPUT_NAME pastix-${prec}matrix-driver-${PASTIX_VERSION}) 
+        target_link_libraries(${prec}matrix_driver PUBLIC pastix)
+        SETINCDIR(${NEUTRAL_PRECISION})
+        install(TARGETS ${prec}matrix_driver EXPORT pastix-config
+            DESTINATION lib
+            COMPONENT ${prec}drivers
+            INCLUDES DESTINATION ${PASTIX_INCDIR_SUFFIX_PREC})
     endif()
 endforeach()
-
-add_library(pastix-matrix-driver ${OBJS})
-set_target_properties(pastix-matrix-driver PROPERTIES OUTPUT_NAME pastix-matrix-driver-${PASTIX_VERSION}) 
-target_link_libraries(pastix-matrix-driver PUBLIC pastix)
-SETINCDIR(${NEUTRAL_PRECISION})
-install(TARGETS pastix-matrix-driver EXPORT pastix-config
-    DESTINATION lib
-    INCLUDES DESTINATION ${PASTIX_INCDIR_SUFFIX_PREC})

@@ -1,17 +1,21 @@
-SET(PERF_SRC
-reg_axpy.c
-reg_copy.c
-reg_geam.c
-reg_gemm.c
-reg_gemv.c
-reg_pof.c
-reg_ppf.c
-reg_scal.c
-reg_trsm.c
-reg_trsv.c
-num_recipes/covsrt.c
-num_recipes/gaussj.c
-num_recipes/lfit.c
-num_recipes/nrutil.c
+SET(PERF_EXECS
+reg_axpy
+reg_copy
+reg_geam
+reg_gemm
+reg_gemv
+reg_pof
+reg_ppf
+reg_scal
+reg_trsm
+reg_trsv
 )
-SET(PERF_SRC_MA )
+add_library(num_recipes num_recipes/covsrt.c num_recipes/gaussj.c num_recipes/lfit.c num_recipes/nrutil.c)
+foreach (PERF_EXEC ${PERF_EXECS})
+    add_executable(${PERF_EXEC} ${PERF_EXEC}.c)
+    target_include_directories(${PERF_EXEC} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/num_recipes>)
+    target_link_libraries(${PERF_EXEC} num_recipes)
+    if (UNIX)
+        target_link_libraries(${PERF_EXEC} m)
+    endif()
+endforeach()
