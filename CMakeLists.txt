@@ -17,6 +17,7 @@ project(PASTIX VERSION 5.2.2.16 LANGUAGES C Fortran CXX)
 # So far: unclear how pastix is going to be used, so we go with this version now.
 
 option(BUILD_TESTS "${PROJECT_NAME} - Build tests" ON)
+option(PACKAGE_CONFIG_DIR "Directory for package config files (relative to CMAKE_INSTALL_PREFIX)" "lib/cmake")
 set(BUILD_PRECISION sdcz CACHE STRING "${PROJECT_NAME} - Build precisions (sdcz)")
 set(INT_TYPE int32 CACHE STRING "${PROJECT_NAME} - Integer version (int32, long, int64)")
 option(USE_THREADS "Use PTHREAD library" ON)
@@ -179,7 +180,7 @@ endif()
 add_subdirectory(src)
 
 install(DIRECTORY include/ DESTINATION include)
-install(EXPORT pastix-config DESTINATION lib/cmake)
+install(EXPORT pastix-config DESTINATION ${PACKAGE_CONFIG_DIR})
 include(CMakePackageConfigHelpers)
 WRITE_BASIC_PACKAGE_VERSION_FILE(${CMAKE_CURRENT_BINARY_DIR}/pastix-config-version.cmake COMPATIBILITY AnyNewerVersion)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/pastix-config-version.cmake DESTINATION lib/cmake)
