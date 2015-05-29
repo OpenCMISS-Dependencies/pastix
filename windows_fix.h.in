@@ -1,0 +1,8 @@
+#ifdef WIN32
+	#define sysconf(a) a
+	#define _SC_NPROCESSORS_ONLN @NUMPROC@
+#endif
+#ifdef _MINGW_
+	#define random rand
+	#define srandom srand
+#endif

@@ -2,6 +2,7 @@
 # (dont ask me...)
 foreach(prec s d c z)
     if(BUILD_PRECISION MATCHES [${prec}])
+        #if (TRUE OR NEED_HEADERS_${prec})
         if (NEED_HEADERS_${prec})
             add_executable(${prec}genheader genheader.c)
             SET(TYPEDEFS )
@@ -46,16 +47,6 @@ foreach(prec s d c z)
                 -DFILE=${PASTIX_SRC}/common/src/pastix_fortran.h
                 -DTARGET=${PASTIXFH}
                 -P ${PASTIX_SOURCE_DIR}/Append.cmake 
-            # Murge
-            COMMAND ${prec}genheader ${PASTIXH} ${PASTIXFH} ${MURGEINC}
-                ${PASTIX_SRC}/sopalin/src/murge_pastix.inc
-                ${PASTIX_SRC}/murge/include/murge.h
-                ${PASTIX_SRC}/murge/scripts/genfort.pl
-                ${PASTIX_SRC}/utils/src/insert-fortran-inc.sh Murge
-            COMMAND ${CMAKE_COMMAND} 
-                -DFILE=${PASTIX_SRC}/common/src/pastix_fortran.inc
-                -DTARGET=${MURGEINC}
-                -P ${PASTIX_SOURCE_DIR}/Append.cmake
             # CSCD Utils
             COMMAND ${prec}genheader ${CSCDUTIL} ${PASTIXFH} ${MURGEINC}
                 ${PASTIX_SRC}/sopalin/src/murge_pastix.inc
@@ -67,6 +58,23 @@ foreach(prec s d c z)
                 -DTARGET=${CSCDUTIL}
                 -P ${PASTIX_SOURCE_DIR}/Append.cmake 
             )
+            if (NOT MINGW)
+                # Somehow for MSYS environments something breaks within the rubbish-code to generate headers for murge.
+                # As this is not used within OpenCMISS thus far, we simply wont create the headers on windows. 
+                add_custom_target(${prec}headers_murge
+                    # Murge
+                    COMMAND ${prec}genheader ${PASTIXH} ${PASTIXFH} ${MURGEINC}
+                        ${PASTIX_SRC}/sopalin/src/murge_pastix.inc
+                        ${PASTIX_SRC}/murge/include/murge.h
+                        ${PASTIX_SRC}/murge/scripts/genfort.pl
+                        ${PASTIX_SRC}/utils/src/insert-fortran-inc.sh Murge
+                    COMMAND ${CMAKE_COMMAND} 
+                        -DFILE=${PASTIX_SRC}/common/src/pastix_fortran.inc
+                        -DTARGET=${MURGEINC}
+                        -P ${PASTIX_SOURCE_DIR}/Append.cmake
+                )
+                add_dependencies(${prec}headers ${prec}headers_murge)
+            endif()
             # Ensure the genheader targets are run after another (write race conditions)
             foreach(doneprec ${DONE})
                 add_dependencies(${prec}genheader ${doneprec}genheader)

@@ -964,7 +964,9 @@ void pastix_task_init(pastix_data_t **pastix_data,
 
   /* Environement variables */
   /* On Mac set VECLIB_MAXIMUM_THREADS if not setted */
+#ifdef __APPLE__
   setenv("VECLIB_MAXIMUM_THREADS", "1", 0);
+#endif
 }
 
 #ifdef MEMORY_USAGE

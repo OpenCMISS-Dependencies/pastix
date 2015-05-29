@@ -22,6 +22,7 @@ macro(IMPORT WHAT)
     target_include_directories(${WHAT} PRIVATE 
         symbol/src common/src order/src sopalin/src perf/src
         fax/src blend/src perf/src/num_recipes kass/src
+        ${MPI_C_INCLUDE_PATH} ${MPI_Fortran_INCLUDE_PATH}
         $<$<BOOL:${USE_PTSCOTCH}>:
             $<TARGET_PROPERTY:ptscotch,INTERFACE_INCLUDE_DIRECTORIES>>
         $<$<BOOL:${USE_PTSCOTCH}>:
@@ -49,6 +50,7 @@ macro(IMPORT WHAT)
             target_include_directories(${lib} PRIVATE 
                 order/src common/src blend/src symbol/src
                 kass/src fax/src perf/src
+                ${MPI_C_INCLUDE_PATH} ${MPI_Fortran_INCLUDE_PATH}
             )
             # Make sure the type specific headers are used
             #target_include_directories(${lib} BEFORE PRIVATE ${PASTIX_INCLUDE_DIR_PREC})
@@ -68,6 +70,7 @@ macro(IMPORT WHAT)
             target_include_directories(${lib} PRIVATE 
                 order/src common/src blend/src symbol/src
                 kass/src fax/src perf/src
+                ${MPI_C_INCLUDE_PATH} ${MPI_Fortran_INCLUDE_PATH}
                 $<$<BOOL:${USE_PTSCOTCH}>:
                     $<TARGET_PROPERTY:ptscotch,INTERFACE_INCLUDE_DIRECTORIES>>
                 $<$<BOOL:${USE_PTSCOTCH}>:
@@ -99,6 +102,7 @@ macro(IMPORT WHAT)
                 target_include_directories(${lib} PRIVATE 
                     order/src common/src blend/src symbol/src
                     kass/src fax/src perf/src
+                    ${MPI_C_INCLUDE_PATH} ${MPI_Fortran_INCLUDE_PATH}
                 )
                 # Make sure the type specific headers are used
                 #target_include_directories(${lib} BEFORE PRIVATE ${PASTIX_INCLUDE_DIR_PREC})
@@ -130,7 +134,11 @@ set_target_properties(pastix PROPERTIES OUTPUT_NAME pastix-${PASTIX_VERSION})
 target_compile_definitions(pastix PRIVATE
     ${COMMON_DEFINITIONS} ${TYPE_DEFINITIONS})
 if (USE_THREADS)
-    target_link_libraries(pastix PUBLIC ${CMAKE_THREAD_LIBS_INIT})
+    #if (MINGW)
+    #    target_link_libraries(pastix PRIVATE pthread)#${CMAKE_THREAD_LIBS_INIT}
+    #else()
+        target_link_libraries(pastix PRIVATE Threads::Threads)#${CMAKE_THREAD_LIBS_INIT}
+    #endif()
 endif()
 target_link_libraries(pastix PUBLIC
     $<$<BOOL:${USE_PTSCOTCH}>:ptscotch>
@@ -138,6 +146,10 @@ target_link_libraries(pastix PUBLIC
     $<$<BOOL:${USE_METIS}>:${METISNAME}>
     blas
     ${CMAKE_Fortran_IMPLICIT_LIBRARIES})
+if (WIN32)
+    target_link_libraries(pastix PUBLIC ${MPI_C_LIBRARIES} ${MPI_Fortran_LIBRARIES})
+endif()
+    
 target_include_directories(pastix 
     PRIVATE common/src symbol/src order/src blend/src sopalin/src
     perf/src perf/src/num_recipes fax/src kass/src

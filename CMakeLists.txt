@@ -16,6 +16,10 @@ project(PASTIX VERSION 5.2.2.16 LANGUAGES C Fortran CXX)
 # src/matrix_drivers uses those headers for the matrix_drivers library
 # So far: unclear how pastix is going to be used, so we go with this version now.
 
+# Instructions for PASTIX builds on windows:
+# http://forge-bd1.inria.fr/forum/message.php?msg_id=148918&group_id=186
+# PThreads from ftp://sourceware.org/pub/pthreads-win32/pthreads-w32-2-9-1-release.zip
+
 option(BUILD_TESTS "${PROJECT_NAME} - Build tests" ON)
 option(PACKAGE_CONFIG_DIR "Directory for package config files (relative to CMAKE_INSTALL_PREFIX)" "lib/cmake")
 set(BUILD_PRECISION sdcz CACHE STRING "${PROJECT_NAME} - Build precisions (sdcz)")
@@ -53,7 +57,11 @@ if (WITH_OPENMP)
 endif()
 if (USE_THREADS)
     find_package(Threads QUIET)
-    if (NOT Threads_FOUND)
+    if (Threads_FOUND)
+        if (MINGW)
+            add_definitions(-D_MINGW_)
+        endif()
+    else()
         message(WARNING "Threading was requested (USE_THREADS=${USE_THREADS}), but package could not be found. Disabling.")
         SET(USE_THREADS NO)
     endif()
@@ -109,6 +117,15 @@ else()
     message(FATAL_ERROR "Unknown integer type: ${INT_TYPE}")
 endif()
 ########################################################################
+
+# Windows hacks
+if (WIN32)
+    cmake_host_system_information(RESULT NUMPROC QUERY NUMBER_OF_LOGICAL_CORES)
+    configure_file(windows_fix.h.in ${CMAKE_CURRENT_BINARY_DIR}/windows_fix.h @ONLY)
+    include_directories(${CMAKE_CURRENT_BINARY_DIR})
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/windows_fix.h DESTINATION include)#/pastix
+endif()
+
 
 # Ensure the include directory exists
 SET(PASTIX_INCDIR_SUFFIX include/pastix/${INT_TYPE})

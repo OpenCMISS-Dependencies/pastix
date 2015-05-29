@@ -136,7 +136,7 @@
 */
 
 /* Redefinition de malloc,free,printf,fprintf */
-#ifdef MARCEL
+#if defined(MARCEL) || defined(_MINGW_)
 #  include <pthread.h>
 #endif
 
@@ -160,7 +160,11 @@
 #include            <limits.h>
 #include            <sys/types.h>
 #include            <sys/time.h>
-#include            <sys/resource.h>
+#ifdef WIN32
+	#include            <windows_fix.h>
+#else
+	#include            <sys/resource.h>	
+#endif
 #include            <unistd.h>
 #include            <float.h>
 #include            <stdint.h>
@@ -322,7 +326,7 @@
 #endif
 
 /*
- *  Définition de la taille des entiers utilisés
+ *  Dï¿½finition de la taille des entiers utilisï¿½s
  */
 #ifdef FORCE_LONG
 #  define PASTIX_INT           long          /* Long integer type */
@@ -813,15 +817,27 @@ void qsort2SmallIntAsc(void ** const pbase,
  * Macro to write in file pastix.pid/fname
  * Don't forget to close the FILE out after
  */
+#ifdef WIN32
 #define OUT_OPENFILEINDIR(iparm, file, fname, mode)               \
   {                                                               \
     char  outdirname[255];                                        \
     char  outfilename[255];                                       \
     sprintf(outdirname, "./pastix.%d", (int)(iparm)[IPARM_PID]);  \
-    mkdir(outdirname, 0755);                                      \
+    mkdir(outdirname);                                      	  \
     sprintf(outfilename, "%s/%s", outdirname, fname);             \
     file = fopen(outfilename, mode);                              \
   }
+#else  
+#define OUT_OPENFILEINDIR(iparm, file, fname, mode)               \
+  {                                                               \
+    char  outdirname[255];                                        \
+    char  outfilename[255];                                       \
+    sprintf(outdirname, "./pastix.%d", (int)(iparm)[IPARM_PID]);  \
+	mkdir(outdirname, 0755);                                      \
+    sprintf(outfilename, "%s/%s", outdirname, fname);             \
+    file = fopen(outfilename, mode);                              \
+  }
+#endif
 #define OUT_CLOSEFILEINDIR(file) fclose(file);
 
 #define PASTIX_MASK_ISTRUE(var, mask) (var == (var | mask))

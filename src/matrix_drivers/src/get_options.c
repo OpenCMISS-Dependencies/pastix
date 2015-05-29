@@ -67,6 +67,7 @@
 #endif
 
 #include "pastix.h"
+//#include "api.h"
 #include "common_drivers.h"
 #include "read_matrix.h"
 #include "get_options.h"
