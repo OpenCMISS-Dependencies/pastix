@@ -6,12 +6,12 @@ SET(SRC_FAC
     sopalin3d.c		
 	starpu_submit_tasks.c	
 	csc_intern_compute.c	
-	raff_functions.c	
+	raff_functions.c
 	starpu_updo.c)
 SET(SOPALIN_SRC_MA
     coefinit.c
  	csc_intern_build.c	
-	csc_intern_compute.c	
+	#csc_intern_compute.c	
 	csc_intern_io.c		
 	csc_intern_solve.c	
 	csc_intern_updown.c	
@@ -22,7 +22,7 @@ SET(SOPALIN_SRC_MA
 	ooc.c			
 	pastix.c		
 	pastix_fortran.c	
-	sopalin3d.c		
+	#sopalin3d.c
 	sopalin_init.c		
 	sopalin_option.c	
 	sparse_gemm_cpu.c	

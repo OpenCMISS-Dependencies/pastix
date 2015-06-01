@@ -28,6 +28,12 @@ option(USE_THREADS "Use PTHREAD library" ON)
 option(USE_METIS "Use METIS orderings" ON)
 option(USE_PTSCOTCH "Use PT-Scotch orderings (will include Scotch)" ON)
 option(USE_SCOTCH "Use Scotch orderings" OFF)
+# This is a dirty hack until questions http://stackoverflow.com/questions/30568733/conditional-transitive-link-libraries
+# and/or my post on the CMake Mailing List are answered. The transitive linking works for one level,
+# but if the imported package scotch has link dependencies itself, those are not known in this context
+# and hence linking will (possibly) fail if the package zlib is not re-included here. 
+option(SCOTCH_WITH_ZLIB "${PROJECT_NAME} - (PT-)Scotch has ZLIB support builtin" ON)
+
 option(WITH_OPENMP "${PROJECT_NAME} - Use OpenMP" ON)
 if (BUILD_SHARED_LIBS)
     # This will cause all the OBJECT targets to have -fPIC as well.
@@ -164,6 +170,9 @@ elseif (USE_SCOTCH)
     find_package(SCOTCH ${SCOTCH_VERSION} REQUIRED)
     add_definitions(-DWITH_SCOTCH)
     message(STATUS "Using Scotch ${SCOTCH_VERSION} orderings")
+endif()
+if (SCOTCH_WITH_ZLIB)
+    FIND_PACKAGE(ZLIB ${ZLIB_VERSION} REQUIRED)
 endif()
 
 if (USE_METIS)
