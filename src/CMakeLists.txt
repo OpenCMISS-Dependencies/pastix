@@ -140,11 +140,13 @@ if (USE_THREADS)
         target_link_libraries(pastix PRIVATE Threads::Threads)#${CMAKE_THREAD_LIBS_INIT}
     #endif()
 endif()
-target_link_libraries(pastix PUBLIC
+target_link_libraries(pastix
+    PRIVATE
     $<$<BOOL:${USE_PTSCOTCH}>:ptscotch>
     $<$<BOOL:${USE_SCOTCH}>:scotch>
     $<$<BOOL:${USE_METIS}>:${METISNAME}>
     blas
+    PUBLIC
     ${CMAKE_Fortran_IMPLICIT_LIBRARIES})
 if (WIN32)
     target_link_libraries(pastix PUBLIC ${MPI_C_LIBRARIES} ${MPI_Fortran_LIBRARIES})
