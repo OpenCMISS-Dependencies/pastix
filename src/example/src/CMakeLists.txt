@@ -34,9 +34,11 @@ SETINCDIR(${NEUTRAL_PRECISION})
 ALLEXECS(notype)
 foreach(prec s d c z)
     if(BUILD_PRECISION MATCHES [${prec}])
+        message(STATUS "Generating ${prec}utils.h")
         execute_process(COMMAND sed -f sed_${prec}.in utils.h
             OUTPUT_FILE ${prec}utils.h
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+        set_source_files_properties(${prec}utils.h PROPERTIES GENERATED TRUE)
         SETINCDIR(${prec})
         ALLEXECS(${prec})
     endif()

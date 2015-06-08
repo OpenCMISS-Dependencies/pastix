@@ -1,6 +1,5 @@
 add_subdirectory(utils/src)
 
-SET(METISNAME metis)
 macro(IMPORT WHAT)
     STRING(TOUPPER "${WHAT}_SRC" VARNAME)
     SET(DIR ${WHAT}/src)
@@ -17,11 +16,14 @@ macro(IMPORT WHAT)
     APPEND_PREFIX(${DIR} MULTIARCH_FILES)
     
     add_library(${WHAT} OBJECT ${REGULAR_FILES} ${MULTIARCH_FILES})
+    #message(STATUS "target_compile_definitions(${WHAT} PRIVATE ${COMMON_DEFINITIONS} CHOL_SOPALIN)")
     target_compile_definitions(${WHAT} 
         PRIVATE ${COMMON_DEFINITIONS} CHOL_SOPALIN)
-    target_include_directories(${WHAT} PRIVATE 
+    target_include_directories(${WHAT} 
+        PRIVATE 
         symbol/src common/src order/src sopalin/src perf/src
         fax/src blend/src perf/src/num_recipes kass/src
+        PUBLIC
         ${MPI_C_INCLUDE_PATH} ${MPI_Fortran_INCLUDE_PATH}
         $<$<BOOL:${USE_PTSCOTCH}>:
             $<TARGET_PROPERTY:ptscotch,INTERFACE_INCLUDE_DIRECTORIES>>
@@ -29,8 +31,8 @@ macro(IMPORT WHAT)
             $<TARGET_PROPERTY:scotch,INTERFACE_INCLUDE_DIRECTORIES>>
         $<$<BOOL:${USE_SCOTCH}>:
             $<TARGET_PROPERTY:scotch,INTERFACE_INCLUDE_DIRECTORIES>>
-        $<$<BOOL:${USE_METIS}>:
-            $<TARGET_PROPERTY:${METISNAME},INTERFACE_INCLUDE_DIRECTORIES>>
+         $<$<BOOL:${USE_METIS}>:
+             $<TARGET_PROPERTY:metis,INTERFACE_INCLUDE_DIRECTORIES>>
     )
     LIST(APPEND ALL_OBJS "$<TARGET_OBJECTS:${WHAT}>")
     if (${WHAT} STREQUAL sopalin)
@@ -45,6 +47,7 @@ macro(IMPORT WHAT)
         foreach(extradef SOPALIN_LU NOEXTRADEF_SY HERMITIAN)
             SET(lib sopalin_${extradef})
             add_library(${lib} OBJECT ${MULTIFAC_FILES})
+            #message(STATUS "target_compile_definitions(${lib} PRIVATE ${extradef} ${COMMON_DEFINITIONS})")
             target_compile_definitions(${lib} PRIVATE
                 ${extradef} ${COMMON_DEFINITIONS})
             target_include_directories(${lib} PRIVATE 
@@ -61,12 +64,13 @@ macro(IMPORT WHAT)
     foreach(prec s d c z)
         SETTYPEDEFS(${prec})
         SETINCDIR(${prec})
-        if(NOT "${MULTIARCH_FILES}" STREQUAL "" 
-           AND BUILD_PRECISION MATCHES [${prec}])
+        list(LENGTH MULTIARCH_FILES _NUM_MA_FILES)
+        if(_NUM_MA_FILES GREATER 0 AND BUILD_PRECISION MATCHES [${prec}])
             SET(lib ${prec}${WHAT})
             add_library(${lib} OBJECT ${MULTIARCH_FILES})
             target_compile_definitions(${lib}
                 PRIVATE ${COMMON_DEFINITIONS} ${TYPEDEFS} CHOL_SOPALIN)
+            #message(STATUS "target_compile_definitions(${lib} PRIVATE ${COMMON_DEFINITIONS} ${TYPEDEFS} CHOL_SOPALIN)")
             target_include_directories(${lib} PRIVATE 
                 order/src common/src blend/src symbol/src
                 kass/src fax/src perf/src
@@ -78,8 +82,9 @@ macro(IMPORT WHAT)
                 $<$<BOOL:${USE_SCOTCH}>:
                     $<TARGET_PROPERTY:scotch,INTERFACE_INCLUDE_DIRECTORIES>>
                 $<$<BOOL:${USE_METIS}>:
-                    $<TARGET_PROPERTY:${METISNAME},INTERFACE_INCLUDE_DIRECTORIES>>
+                    $<TARGET_PROPERTY:metis,INTERFACE_INCLUDE_DIRECTORIES>>
             )
+            
             # Make sure the type specific headers are used
             #target_include_directories(${lib} BEFORE PRIVATE ${PASTIX_INCLUDE_DIR_PREC})
             LIST(APPEND ALL_OBJS "$<TARGET_OBJECTS:${lib}>")
@@ -99,6 +104,7 @@ macro(IMPORT WHAT)
                 add_library(${lib} OBJECT ${MULTIFAC_FILES})
                 target_compile_definitions(${lib} PRIVATE
                     ${extradef} ${COMMON_DEFINITIONS} ${TYPEDEFS})
+                #message(STATUS "target_compile_definitions(${lib} PRIVATE ${extradef} ${COMMON_DEFINITIONS} ${TYPEDEFS} CHOL_SOPALIN)")
                 target_include_directories(${lib} PRIVATE 
                     order/src common/src blend/src symbol/src
                     kass/src fax/src perf/src
@@ -111,6 +117,7 @@ macro(IMPORT WHAT)
         endif()
     endforeach()
 endmacro()
+
 macro(APPEND_PREFIX PREFIX FILELIST)
     SET(outlist )
     FOREACH(root ${${FILELIST}})
@@ -133,6 +140,7 @@ add_library(pastix ${ALL_OBJS})
 set_target_properties(pastix PROPERTIES OUTPUT_NAME pastix-${PASTIX_VERSION})
 target_compile_definitions(pastix PRIVATE
     ${COMMON_DEFINITIONS} ${TYPE_DEFINITIONS})
+#message(STATUS "target_compile_definitions(pastix PRIVATE ${COMMON_DEFINITIONS} ${TYPE_DEFINITIONS})")    
 if (USE_THREADS)
     #if (MINGW)
     #    target_link_libraries(pastix PRIVATE pthread)#${CMAKE_THREAD_LIBS_INIT}
@@ -141,12 +149,9 @@ if (USE_THREADS)
     #endif()
 endif()
 target_link_libraries(pastix
-    PRIVATE
-    $<$<BOOL:${USE_PTSCOTCH}>:ptscotch>
-    $<$<BOOL:${USE_SCOTCH}>:scotch>
-    $<$<BOOL:${USE_METIS}>:${METISNAME}>
-    blas
     PUBLIC
+    ${GRAPH_LIBS}
+    blas
     ${CMAKE_Fortran_IMPLICIT_LIBRARIES})
 if (WIN32)
     target_link_libraries(pastix PUBLIC ${MPI_C_LIBRARIES} ${MPI_Fortran_LIBRARIES})
@@ -156,6 +161,7 @@ target_include_directories(pastix
     PRIVATE common/src symbol/src order/src blend/src sopalin/src
     perf/src perf/src/num_recipes fax/src kass/src
     matrix_drivers/src
+    PUBLIC
     ${MPI_C_INCLUDE_PATH} ${MPI_Fortran_INCLUDE_PATH}
     )
 

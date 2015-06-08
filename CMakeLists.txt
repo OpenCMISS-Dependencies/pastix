@@ -21,6 +21,7 @@ project(PASTIX VERSION 5.2.2.16 LANGUAGES C Fortran CXX)
 # PThreads from ftp://sourceware.org/pub/pthreads-win32/pthreads-w32-2-9-1-release.zip
 
 option(BUILD_TESTS "${PROJECT_NAME} - Build tests" ON)
+set(BUILD_TESTS NO)
 option(PACKAGE_CONFIG_DIR "Directory for package config files (relative to CMAKE_INSTALL_PREFIX)" "lib/cmake")
 set(BUILD_PRECISION sdcz CACHE STRING "${PROJECT_NAME} - Build precisions (sdcz)")
 set(INT_TYPE int32 CACHE STRING "${PROJECT_NAME} - Integer version (int32, long, int64)")
@@ -28,12 +29,6 @@ option(USE_THREADS "Use PTHREAD library" ON)
 option(USE_METIS "Use METIS orderings" ON)
 option(USE_PTSCOTCH "Use PT-Scotch orderings (will include Scotch)" ON)
 option(USE_SCOTCH "Use Scotch orderings" OFF)
-# This is a dirty hack until questions http://stackoverflow.com/questions/30568733/conditional-transitive-link-libraries
-# and/or my post on the CMake Mailing List are answered. The transitive linking works for one level,
-# but if the imported package scotch has link dependencies itself, those are not known in this context
-# and hence linking will (possibly) fail if the package zlib is not re-included here. 
-option(SCOTCH_WITH_ZLIB "${PROJECT_NAME} - (PT-)Scotch has ZLIB support builtin" ON)
-
 option(WITH_OPENMP "${PROJECT_NAME} - Use OpenMP" ON)
 if (BUILD_SHARED_LIBS)
     # This will cause all the OBJECT targets to have -fPIC as well.
@@ -132,27 +127,26 @@ if (WIN32)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/windows_fix.h DESTINATION include)#/pastix
 endif()
 
-
-# Ensure the include directory exists
 SET(PASTIX_INCDIR_SUFFIX include/pastix/${INT_TYPE})
-SET(PASTIX_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${PASTIX_INCDIR_SUFFIX})
+SET(PASTIX_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/${PASTIX_INCDIR_SUFFIX})
 SET(PASTIX_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src)
-execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${PASTIX_INCLUDE_DIR})
+file(MAKE_DIRECTORY ${PASTIX_INCLUDE_DIR})
 
 macro(SETINCDIR precision)
     SET(PASTIX_INCLUDE_DIR_PREC ${PASTIX_INCLUDE_DIR}/${precision})
     SET(PASTIX_INCDIR_SUFFIX_PREC ${PASTIX_INCDIR_SUFFIX}/${precision})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${PASTIX_INCLUDE_DIR_PREC})
+    file(MAKE_DIRECTORY ${PASTIX_INCLUDE_DIR_PREC})
 endmacro()
 macro(SETTYPEDEFS precision)
     SET(TYPEDEFS WITH_TYPE_PREFIX)
-    if (${precision} MATCHES [dz])
+    #Somehow "${precision} MATCHES [dz]" wont work for "d" at the first cmake run; after the second it works.
+    if (${precision} STREQUAL d OR ${precision} STREQUAL z) 
         LIST(APPEND TYPEDEFS PREC_DOUBLE)
     endif()
     if (${precision} MATCHES [cz])
         LIST(APPEND TYPEDEFS TYPE_COMPLEX)     
     endif()
-    #message(STATUS "Call to SETTYPEDEFS with prec '${precision}' gave ${TYPEDEFS}")
+    #message(STATUS "Call to SETTYPEDEFS with prec '${precision}' gave ${TYPEDEFS} (${precision} MATCHES [dz])")
 endmacro()
 
 if (NOT USE_THREADS)
@@ -162,14 +156,17 @@ if (NOT USE_CUDA)
     add_definitions(-DFORCE_NO_CUDA)
 endif()
 
+set(GRAPH_LIBS )
 if (USE_PTSCOTCH)
     find_package(PTSCOTCH ${PTSCOTCH_VERSION} REQUIRED)
     add_definitions(-DWITH_SCOTCH -DDISTRIBUTED)
     message(STATUS "Using PT-Scotch ${PTSCOTCH_VERSION} orderings")
+    list(APPEND GRAPH_LIBS ptscotch)
 elseif (USE_SCOTCH)
     find_package(SCOTCH ${SCOTCH_VERSION} REQUIRED)
     add_definitions(-DWITH_SCOTCH)
     message(STATUS "Using Scotch ${SCOTCH_VERSION} orderings")
+    list(APPEND GRAPH_LIBS scotch)
 endif()
 
 if (USE_METIS)
@@ -178,9 +175,10 @@ if (USE_METIS)
     find_package(METIS ${METIS_VERSION} REQUIRED)
     add_definitions(-DMETIS)
     message(STATUS "Using Metis ${METIS_VERSION} orderings")
+    list(APPEND GRAPH_LIBS metis)
 endif()
 
-foreach(prec s d c z)
+foreach(prec d s c z)
     if(BUILD_PRECISION MATCHES [${prec}])
         # We need a neutral precision for notype-includes
         if(NOT NEUTRAL_PRECISION)
@@ -202,7 +200,7 @@ endif()
 
 add_subdirectory(src)
 
-install(DIRECTORY include/ DESTINATION include)
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include/ DESTINATION include)
 install(EXPORT pastix-config DESTINATION ${PACKAGE_CONFIG_DIR})
 include(CMakePackageConfigHelpers)
 WRITE_BASIC_PACKAGE_VERSION_FILE(${CMAKE_CURRENT_BINARY_DIR}/pastix-config-version.cmake COMPATIBILITY AnyNewerVersion)

@@ -1,5 +1,4 @@
 build/
-include/
 src/sopalin/src/murge_pastix.inc.tmp
 src/matrix_drivers/src/api_str_to_int.c
 .gitignore~
