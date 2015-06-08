@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.2)
 project(PASTIX VERSION 5.2.2.16 LANGUAGES C Fortran CXX)
 
 # no starpu yet
@@ -171,9 +171,6 @@ elseif (USE_SCOTCH)
     add_definitions(-DWITH_SCOTCH)
     message(STATUS "Using Scotch ${SCOTCH_VERSION} orderings")
 endif()
-if (SCOTCH_WITH_ZLIB)
-    FIND_PACKAGE(ZLIB ${ZLIB_VERSION} REQUIRED)
-endif()
 
 if (USE_METIS)
     # Fixed up the pastix.c file to have it compile against Metis 5.
@@ -209,4 +206,25 @@ install(DIRECTORY include/ DESTINATION include)
 install(EXPORT pastix-config DESTINATION ${PACKAGE_CONFIG_DIR})
 include(CMakePackageConfigHelpers)
 WRITE_BASIC_PACKAGE_VERSION_FILE(${CMAKE_CURRENT_BINARY_DIR}/pastix-config-version.cmake COMPATIBILITY AnyNewerVersion)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/pastix-config-version.cmake DESTINATION ${PACKAGE_CONFIG_DIR})
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/pastix-config-dependencies.cmake 
+    "include(CMakeFindDependencyMacro)\r\n"
+    "set(_OLD_IMPORT_PREFIX \${_IMPORT_PREFIX})\r\n"
+)
+file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/pastix-config-dependencies.cmake "find_dependency(BLAS ${BLAS_VERSION})\r\n")
+if (USE_METIS)
+    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/pastix-config-dependencies.cmake "find_dependency(METIS ${METIS_VERSION})\r\n")
+endif()
+if (USE_SCOTCH)
+    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/pastix-config-dependencies.cmake "find_dependency(SCOTCH ${SCOTCH_VERSION})\r\n")
+endif()
+if (USE_PTSCOTCH)
+    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/pastix-config-dependencies.cmake "find_dependency(PTSCOTCH ${PTSCOTCH_VERSION})\r\n")
+endif()
+if (USE_THREADS)
+    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/pastix-config-dependencies.cmake "find_dependency(Threads)\r\n")
+endif()
+file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/pastix-config-dependencies.cmake "set(_IMPORT_PREFIX \${_OLD_IMPORT_PREFIX})")
+install(FILES 
+    ${CMAKE_CURRENT_BINARY_DIR}/pastix-config-version.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/pastix-config-dependencies.cmake
+    DESTINATION ${PACKAGE_CONFIG_DIR})
