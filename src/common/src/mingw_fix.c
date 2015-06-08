@@ -2,12 +2,12 @@
  * Includes a hotfix where clock_gettime is not implemented on mingw 32bit environments.
  */
 #if __MINGW32__
+/*
+ * See also the added lines in common_pastix.h:948
+ */
 #include "common_pastix.h"
 #include <time.h>
 #include "windows.h"
-#ifndef CLOCK_REALTIME
-	#define CLOCK_REALTIME 1
-#endif
 
     LARGE_INTEGER
     getFILETIMEoffset()

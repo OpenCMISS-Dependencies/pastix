@@ -6,3 +6,8 @@
 	#define random rand
 	#define srandom srand
 #endif
+
+/* Hack to have CLOCK_REALTIME in pastix on mingw32 */
+#if defined(__MINGW32__) && !defined(CLOCK_REALTIME)
+	#define CLOCK_REALTIME 1
+#endif
