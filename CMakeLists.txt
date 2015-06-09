@@ -21,7 +21,6 @@ project(PASTIX VERSION 5.2.2.16 LANGUAGES C Fortran CXX)
 # PThreads from ftp://sourceware.org/pub/pthreads-win32/pthreads-w32-2-9-1-release.zip
 
 option(BUILD_TESTS "${PROJECT_NAME} - Build tests" ON)
-set(BUILD_TESTS NO)
 option(PACKAGE_CONFIG_DIR "Directory for package config files (relative to CMAKE_INSTALL_PREFIX)" "lib/cmake")
 set(BUILD_PRECISION sdcz CACHE STRING "${PROJECT_NAME} - Build precisions (sdcz)")
 set(INT_TYPE int32 CACHE STRING "${PROJECT_NAME} - Integer version (int32, long, int64)")
