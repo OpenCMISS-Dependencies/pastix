@@ -71,19 +71,22 @@ if (BUILD_TESTS)
     enable_testing()
 endif()
 
-# it seems that sparsekit.f90 is not used
-#set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffree-form -x f95-cpp-input")
-if (MPI_C_COMPILER)
-    set(CMAKE_C_COMPILER ${MPI_C_COMPILER})
-endif()
-if (MPI_CXX_COMPILER)
-    set(CMAKE_CXX_COMPILER ${MPI_CXX_COMPILER})
-endif()
-if (MPI_Fortran_COMPILER)
-    set(CMAKE_Fortran_COMPILER ${MPI_Fortran_COMPILER})
-endif()
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
-#set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3")
+#include(CheckFortranCompilerFlag)
+# This bit surely does not work as some files dont have Fortran free form
+# See https://gcc.gnu.org/onlinedocs/gfortran/Fortran-Dialect-Options.html
+#CHECK_Fortran_COMPILER_FLAG(-ffree-form HAVE_Fortran_FREEFORM_FLAG)
+#if (HAVE_Fortran_FREEFORM_FLAG)
+#    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffree-form")
+#endif()
+#CHECK_Fortran_COMPILER_FLAG(-x HAVE_Fortran_X_FLAG)
+#if (HAVE_Fortran_X_FLAG)
+#    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -x")
+#endif()
+#CHECK_Fortran_COMPILER_FLAG(f95-cpp-input HAVE_Fortran_f95_cpp_FLAG)
+#if (HAVE_Fortran_f95_cpp_FLAG)
+#    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} f95-cpp-input")
+#endif()
+
 # Detect host architecture
 # Yet undetermined:
 # Compaq: alpha_compaq_osf1
