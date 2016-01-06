@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.3)
 project(PASTIX VERSION 5.2.2.16 LANGUAGES C Fortran CXX)
 
 # no starpu yet
