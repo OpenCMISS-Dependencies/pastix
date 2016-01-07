@@ -42,7 +42,7 @@ SET(USE_MAGMABLAS OFF) # BLAS for GPU?!
 include(CMakePackageConfigHelpers)
 
 find_package(BLAS ${BLAS_VERSION} REQUIRED)
-find_package(MPI REQUIRED)
+find_package(MPI QUIET REQUIRED)
 
 if (WITH_OPENMP)
   find_package(OpenMP)
