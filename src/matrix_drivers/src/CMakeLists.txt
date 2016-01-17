@@ -113,8 +113,6 @@ foreach(prec s d c z)
             PRIVATE
             ${PASTIX_INCLUDE_DIR_PREC}
             ${CMAKE_CURRENT_SOURCE_DIR}
-            PUBLIC	
-            ${MPI_C_INCLUDE_PATH} ${MPI_Fortran_INCLUDE_PATH}
         )
         SETTYPEDEFS(${prec})
         target_compile_definitions(${prec}matrix_driver

@@ -139,7 +139,9 @@ IMPORT(sparse-matrix)
 add_library(pastix ${ALL_OBJS})
 set_target_properties(pastix PROPERTIES OUTPUT_NAME pastix-${PASTIX_VERSION})
 target_compile_definitions(pastix PRIVATE
-    ${COMMON_DEFINITIONS} ${TYPE_DEFINITIONS})
+    ${COMMON_DEFINITIONS}
+    ${TYPE_DEFINITIONS}
+)
 #message(STATUS "target_compile_definitions(pastix PRIVATE ${COMMON_DEFINITIONS} ${TYPE_DEFINITIONS})")    
 if (USE_THREADS)
     #if (MINGW)
@@ -148,22 +150,16 @@ if (USE_THREADS)
         target_link_libraries(pastix PRIVATE Threads::Threads)#${CMAKE_THREAD_LIBS_INIT}
     #endif()
 endif()
-target_link_libraries(pastix
-    PUBLIC
-    ${GRAPH_LIBS}
-    blas
-    ${CMAKE_Fortran_IMPLICIT_LIBRARIES})
-if (WIN32)
-    target_link_libraries(pastix PUBLIC ${MPI_C_LIBRARIES} ${MPI_Fortran_LIBRARIES})
+target_link_libraries(pastix PRIVATE blas PUBLIC ${GRAPH_LIBS})
+if (NOT CMAKE_C_COMPILER STREQUAL MPI_C_COMPILER)
+    target_link_libraries(pastix PRIVATE mpi)
 endif()
     
 target_include_directories(pastix 
     PRIVATE common/src symbol/src order/src blend/src sopalin/src
     perf/src perf/src/num_recipes fax/src kass/src
     matrix_drivers/src
-    PUBLIC
-    ${MPI_C_INCLUDE_PATH} ${MPI_Fortran_INCLUDE_PATH}
-    )
+)
 
 SETINCDIR(${NEUTRAL_PRECISION})
 install(TARGETS pastix EXPORT pastix-config
