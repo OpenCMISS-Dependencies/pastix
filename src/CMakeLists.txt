@@ -152,7 +152,7 @@ if (USE_THREADS)
 endif()
 target_link_libraries(pastix PRIVATE blas PUBLIC ${GRAPH_LIBS})
 if (NOT CMAKE_C_COMPILER STREQUAL MPI_C_COMPILER)
-    target_link_libraries(pastix PRIVATE mpi)
+    target_link_libraries(pastix PUBLIC $<BUILD_INTERFACE:mpi>)
 endif()
     
 target_include_directories(pastix 
