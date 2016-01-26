@@ -1,2 +1,2 @@
-SET(SPM_SRC pastix_sparse_matrix.c)
-SET(SPM_SRC_MA )
+SET(SPARSE-MATRIX_SRC pastix_sparse_matrix.c)
+SET(SPARSE-MATRIX_MA )
