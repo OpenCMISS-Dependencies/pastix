@@ -24,7 +24,6 @@ macro(IMPORT WHAT)
         symbol/src common/src order/src sopalin/src perf/src
         fax/src blend/src perf/src/num_recipes kass/src
         PUBLIC
-        ${MPI_C_INCLUDE_PATH} ${MPI_Fortran_INCLUDE_PATH}
         $<$<BOOL:${USE_PTSCOTCH}>:
             $<TARGET_PROPERTY:ptscotch,INTERFACE_INCLUDE_DIRECTORIES>>
         $<$<BOOL:${USE_PTSCOTCH}>:
@@ -74,7 +73,6 @@ macro(IMPORT WHAT)
             target_include_directories(${lib} PRIVATE 
                 order/src common/src blend/src symbol/src
                 kass/src fax/src perf/src
-                ${MPI_C_INCLUDE_PATH} ${MPI_Fortran_INCLUDE_PATH}
                 $<$<BOOL:${USE_PTSCOTCH}>:
                     $<TARGET_PROPERTY:ptscotch,INTERFACE_INCLUDE_DIRECTORIES>>
                 $<$<BOOL:${USE_PTSCOTCH}>:
@@ -151,9 +149,7 @@ if (USE_THREADS)
     #endif()
 endif()
 target_link_libraries(pastix PRIVATE blas PUBLIC ${GRAPH_LIBS})
-if (NOT CMAKE_C_COMPILER STREQUAL MPI_C_COMPILER)
-    target_link_libraries(pastix PUBLIC $<BUILD_INTERFACE:mpi>)
-endif()
+target_link_libraries(pastix PUBLIC $<BUILD_INTERFACE:mpi-c>)
     
 target_include_directories(pastix 
     PRIVATE common/src symbol/src order/src blend/src sopalin/src

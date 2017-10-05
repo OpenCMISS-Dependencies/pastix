@@ -70,7 +70,7 @@ if (BUILD_TESTS)
     endmacro()
     macro(ADDTEST_MPI basename np)
         add_executable(${basename} ${basename}.c)
-        target_link_libraries(${basename} pastix ${NEUTRAL_PRECISION}matrix_driver)
+        target_link_libraries(${basename} pastix ${NEUTRAL_PRECISION}matrix_driver mpi-c)
         target_compile_definitions(${basename} PRIVATE NODESIZE=8 ${COMMON_DEFINITIONS})
         target_include_directories(${basename} PRIVATE
             ${PASTIX_INCLUDE_DIR_PREC}

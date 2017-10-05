@@ -1,8 +1,5 @@
-# Build examples.
-if (MPI_FOUND)
-    include_directories(${MPI_Fortran_INCLUDE_PATH} ${MPI_CXX_INCLUDE_PATH} ${MPI_C_INCLUDE_PATH})
-endif()
 
+# Build examples.
 macro(ADDEXEC name src prec)
     #message(STATUS "adding executable ${name} with incdir: ${PASTIX_INCLUDE_DIR_PREC}")
     add_executable(${name} ${src})
@@ -63,10 +60,11 @@ if (MPI_FOUND)
     add_dependencies(futils ${NEUTRAL_PRECISION}matrix_driver)
     target_include_directories(futils PRIVATE
         ${PASTIX_INCLUDE_DIR_PREC}
+        ${MPI_Fortran_INCLUDE_PATH}
     ) 
     macro(ADDEXECF name src)
         add_executable(${name} ${src} $<TARGET_OBJECTS:futils>)
-        target_link_libraries(${name} pastix ${NEUTRAL_PRECISION}matrix_driver)
+        target_link_libraries(${name} pastix ${NEUTRAL_PRECISION}matrix_driver mpi-fortran)
         target_include_directories(${name} PRIVATE
             ${PASTIX_INCLUDE_DIR_PREC}
         )    
