@@ -1,41 +1,42 @@
-SET(SOPALIN_SRC bordi.c
-	 sopalin_thread.c
-	 compute_context_nbr.c
+set(SOPALIN_SRC bordi.c
+    sopalin_thread.c
+    compute_context_nbr.c
 )
-SET(SRC_FAC
-    sopalin3d.c		
-	starpu_submit_tasks.c	
-	csc_intern_compute.c	
-	raff_functions.c
-	starpu_updo.c)
-SET(SOPALIN_SRC_MA
+set(SRC_FAC
+    sopalin3d.c
+    starpu_submit_tasks.c
+    csc_intern_compute.c
+    raff_functions.c
+    starpu_updo.c
+)
+set(SOPALIN_SRC_MA
     coefinit.c
- 	csc_intern_build.c	
-	#csc_intern_compute.c	
-	csc_intern_io.c		
-	csc_intern_solve.c	
-	csc_intern_updown.c	
-	csc_utils.c		
-	cscd_utils.c		
-	cscd_utils_fortran.c    
-	debug_dump.c		
-	ooc.c			
-	pastix.c		
-	pastix_fortran.c	
-	#sopalin3d.c
-	sopalin_init.c		
-	sopalin_option.c	
-	sparse_gemm_cpu.c	
-	tools.c
-	${SRC_FAC}
+    csc_intern_build.c
+    #csc_intern_compute.c
+    csc_intern_io.c
+    csc_intern_solve.c
+    csc_intern_updown.c
+    csc_utils.c
+    cscd_utils.c
+    cscd_utils_fortran.c
+    debug_dump.c
+    ooc.c
+    pastix.c
+    pastix_fortran.c
+    #sopalin3d.c
+    sopalin_init.c
+    sopalin_option.c
+    sparse_gemm_cpu.c
+    tools.c
+    ${SRC_FAC}
 )
 if (USE_STARPU)
-    LIST(APPEND SOPALIN_SRC starpu_pastix_sched_policy.c)
+    List(APPEND SOPALIN_SRC starpu_pastix_sched_policy.c)
     if (USE_CUDA)
-        LIST(APPEND SOPALIN_SRC_MA sparse_gemm.cu geadd_cuda.cu getra_cuda.cu)
+        list(APPEND SOPALIN_SRC_MA sparse_gemm.cu geadd_cuda.cu getra_cuda.cu)
     endif()
     if (USE_MAGMABLAS)
-        LIST(APPEND SOPALIN_SRC_MA 
+        list(APPEND SOPALIN_SRC_MA
             zgetrf_stapiv_gpu.c
             zpotrf_stapiv_gpu.c
             zhetrf_stapiv_gpu.c
