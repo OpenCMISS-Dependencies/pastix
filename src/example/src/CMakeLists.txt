@@ -64,7 +64,7 @@ if (MPI_FOUND)
     ) 
     macro(ADDEXECF name src)
         add_executable(${name} ${src} $<TARGET_OBJECTS:futils>)
-        target_link_libraries(${name} pastix ${NEUTRAL_PRECISION}matrix_driver mpi-fortran)
+        target_link_libraries(${name} pastix ${NEUTRAL_PRECISION}matrix_driver MPI::MPI_Fortran)
         target_include_directories(${name} PRIVATE
             ${PASTIX_INCLUDE_DIR_PREC}
         )    

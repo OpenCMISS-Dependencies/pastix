@@ -149,7 +149,7 @@ if (USE_THREADS)
     #endif()
 endif()
 target_link_libraries(pastix PRIVATE blas PUBLIC ${GRAPH_LIBS})
-target_link_libraries(pastix PUBLIC $<BUILD_INTERFACE:mpi-c>)
+target_link_libraries(pastix PUBLIC $<BUILD_INTERFACE:MPI::MPI_C>)
     
 target_include_directories(pastix 
     PRIVATE common/src symbol/src order/src blend/src sopalin/src
